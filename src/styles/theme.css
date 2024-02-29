@@ -1,0 +1,7 @@
+:root {
+  --brand-base: #1b76e2;
+}
+
+.dark-theme {
+  --brand-base: #136dd7;
+}

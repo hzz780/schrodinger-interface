@@ -1,0 +1,5 @@
+.footer {
+  @apply flex justify-center items-center max-w-[1440px] px-[16px] md:px-[40px] mx-auto font-normal text-[14px] leading-[22px] text-[#919191] h-[64px] w-full;
+
+  box-shadow: 0 1px 0 0 #EDEDED inset;
+}
