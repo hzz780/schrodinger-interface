@@ -1,0 +1,34 @@
+{
+  "App prefix": {
+    "scope": "less",
+    "prefix": "v",
+    "body": [
+      "~'var(--@{app-prefix}-$1)'"
+    ],
+    "description": "less prefix"
+  },
+  "App no prefix": {
+    "scope": "less",
+    "prefix": "vr",
+    "body": [
+      "~'var($1)'"
+    ],
+    "description": "less prefix"
+  },
+  "Class prefix": {
+    "scope": "less",
+    "prefix": "c",
+    "body": [
+      ".@{app-prefix}-$1"
+    ],
+    "description": "less class prefix"
+  },
+  "Export tem": {
+    "scope": "typescript,javascript",
+    "prefix": "exd",
+    "body": [
+      "export { default } from '.$1'"
+    ],
+    "description": "export default"
+  }
+}

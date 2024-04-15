@@ -1,0 +1,12 @@
+.tokensInfo {
+  @apply my-6;
+  .schrodingerImg {
+    @apply size-20 rounded-xl flex-none;
+  }
+  .title {
+    @apply text-xl lg:text-4xl font-semibold text-neutralPrimary;
+  }
+  .description {
+    @apply whitespace-pre-wrap text-sm text-neutralPrimary;
+  }
+}

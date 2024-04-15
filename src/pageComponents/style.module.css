@@ -1,0 +1,7 @@
+.schrodinger-content {
+  min-height: calc(100% - 94px);
+}
+
+.schrodinger-mobile-content {
+  min-height: calc(100% - 98px);
+}

@@ -1,5 +1,124 @@
+/* stylelint-disable no-descending-specificity */
 .footer {
-  @apply flex justify-center items-center max-w-[1440px] px-[16px] md:px-[40px] mx-auto font-normal text-[14px] leading-[22px] text-[#919191] h-[64px] w-full;
-
-  box-shadow: 0 1px 0 0 #EDEDED inset;
+  @apply flex flex-col lg:flex-row 
+  justify-center lg:justify-between 
+  gap-[16px]
+  items-center px-[16px] md:px-[40px] font-normal text-[14px] leading-[22px] text-[#919191] h-[98px] lg:h-[64px] w-full;
 }
+
+.light {
+  .footer {
+    box-shadow: 0 1px 0 0 #ededed inset;
+  }
+
+  .icon.discord {
+    &:hover {
+      svg path {
+        @apply fill-[#5565FB];
+      }
+    }
+  }
+  
+  .icon.gitbook {
+    &:hover {
+      svg path {
+        @apply fill-[#000];
+      }
+    }
+  }
+  
+  .icon.linktree {
+    &:hover {
+      svg path {
+        @apply fill-[#43E660];
+      }
+    }
+  }
+  
+  .icon.telegram {
+    &:hover {
+      svg path {
+        @apply fill-[#01A3E0];
+      }
+    }
+  }
+  
+  .icon.twitter {
+    &:hover {
+      svg path {
+        @apply fill-[#000];
+      }
+    }
+  }
+
+  .footer-text {
+    @apply text-neutralSecondary;
+  }
+  
+}
+
+.dark {
+  .footer {
+    @apply shadow-none;
+  }
+
+  .icon.discord {
+    svg path {
+      @apply fill-[#fff];
+    }
+    &:hover {
+      svg path {
+        fill: rgb(255 255 255 / 80%);
+      }
+    }
+  }
+  
+  .icon.gitbook {
+    svg path {
+      @apply fill-[#fff];
+    }
+    &:hover {
+      svg path {
+        fill: rgb(255 255 255 / 80%);
+      }
+    }
+  }
+  
+  .icon.linktree {
+    svg path {
+      @apply fill-[#fff];
+    }
+    &:hover {
+      svg path {
+        fill: rgb(255 255 255 / 80%);
+      }
+    }
+  }
+  
+  .icon.telegram {
+    svg path {
+      @apply fill-[#fff];
+    }
+    &:hover {
+      svg path {
+        fill: rgb(255 255 255 / 80%);
+      }
+    }
+  }
+  
+  .icon.twitter {
+    svg path {
+      @apply fill-[#fff];
+    }
+    &:hover {
+      svg path {
+        fill: rgb(255 255 255 / 80%);
+      }
+    }
+  }
+
+  .footer-text {
+    @apply text-neutralWhiteBg;
+  }
+}
+

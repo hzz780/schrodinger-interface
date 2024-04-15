@@ -1,0 +1,28 @@
+.filter-tags {
+  @apply w-full flex items-center;
+  .filter-tags-container {
+    @apply flex flex-wrap items-center gap-[16px];
+    .tag-item {
+      @apply flex items-center px-[12px] py-[5px] bg-neutralDefaultBg rounded-[12px];
+      .tag-label {
+        @apply flex items-center text-[14px] leading-[22px] text-neutralPrimary mr-[8px];
+      }
+      .tag-close {
+        @apply text-neutralTitle size-3 transition-none;
+      }
+    }
+    .tag-item:hover {
+      @apply bg-brandBg;
+      .tag-close {
+        @apply text-brandDefault;
+      }
+    }
+    .tag-item:last-child {
+      @apply !mr-0;
+    }
+  }
+}
+
+.filter__button {
+  @apply py-[5px] cursor-pointer text-[14px] leading-[22px] font-medium text-brandDefault;
+}

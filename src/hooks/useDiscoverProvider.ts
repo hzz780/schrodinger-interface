@@ -26,18 +26,12 @@ export default function useDiscoverProvider() {
       payload: { data },
     });
     if (!signature || signature.recoveryParam == null) return {};
-    const signatureStr = [
-      zeroFill(signature.r),
-      zeroFill(signature.s),
-      `0${signature.recoveryParam.toString()}`,
-    ].join('');
+    const signatureStr = [zeroFill(signature.r), zeroFill(signature.s), `0${signature.recoveryParam.toString()}`].join(
+      '',
+    );
 
     // recover pubkey by signature
-    const publicKey = ec.recoverPubKey(
-      Buffer.from(data.slice(0, 64), 'hex'),
-      signature,
-      signature.recoveryParam,
-    );
+    const publicKey = ec.recoverPubKey(Buffer.from(data.slice(0, 64), 'hex'), signature, signature.recoveryParam);
     const pubKey = ec.keyFromPublic(publicKey).getPublic('hex');
 
     return { pubKey, signatureStr };

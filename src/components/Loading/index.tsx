@@ -1,36 +1,28 @@
-import { Modal } from 'antd';
-import styles from './style.module.css';
-import { useMount } from 'ahooks';
-import { useState } from 'react';
-import Image from 'next/image';
+import Lottie from 'lottie-react';
+import LoadingAnimation from 'assets/img/loading-animation.json';
+import LoadingAnimationBlue from 'assets/img/loading-animation-blue.json';
+import { useMemo } from 'react';
+import React from 'react';
 
-export default function Loading() {
-  const [visible, setVisible] = useState(false);
-  useMount(() => {
-    setVisible(true);
-  });
-  return (
-    <div className="bg-black opacity-60">
-      <Modal
-        className={styles.loading}
-        open={visible}
-        footer={null}
-        closable={false}
-        closeIcon={null}
-      >
-        <section className="flex flex-col justify-center items-center">
-          <Image
-            className={styles.loadingImg}
-            src={require('assets/img/loading.svg').default}
-            alt="loading"
-            width={40}
-            height={40}
-          />
-          <span className="mt-[12px] text-[#1A1A1A] text-[14px] leading-[20px] font-normal text-center">
-            Enrollment in progress
-          </span>
-        </section>
-      </Modal>
-    </div>
-  );
+const loadingImg = {
+  white: LoadingAnimation,
+  blue: LoadingAnimationBlue,
+};
+
+interface IProps {
+  color?: 'white' | 'blue';
 }
+
+function Loading({ color = 'blue' }: IProps) {
+  const options = useMemo(() => {
+    return {
+      animationData: loadingImg[color],
+      loop: true,
+      autoplay: true,
+    };
+  }, [color]);
+
+  return <Lottie {...options} className="w-[40px] h-[40px]" />;
+}
+
+export default React.memo(Loading);

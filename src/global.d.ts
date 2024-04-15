@@ -10,6 +10,13 @@ interface Window {
   web3?: {};
   plus?: any;
   NightElf?: {};
+  portkeyShellApp?: {
+    deviceEnv?: {
+      statusBarHeight?: number;
+      bottomBarHeight?: number;
+      platform?: import('types').DeviceTypeEnum;
+    };
+  };
 }
 
 interface HTMLAttributes<T> {

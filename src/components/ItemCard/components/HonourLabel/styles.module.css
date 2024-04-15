@@ -1,0 +1,23 @@
+.bronze {
+  @apply border-rarityBronze text-rarityBronze;
+}
+
+.silver {
+  @apply border-raritySilver text-raritySilver;
+}
+
+.gold {
+  @apply border-rarityGold text-rarityGold;
+}
+
+.platinum {
+  @apply border-rarityPlatinum text-rarityPlatinum;
+}
+
+.halcyon {
+  @apply border-rarityHalcyon text-rarityHalcyon;
+}
+
+.diamond {
+  @apply border-rarityDiamond text-rarityDiamond;
+}

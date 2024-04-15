@@ -1,0 +1,13 @@
+[defaults]
+url=https://sentry.io/
+project=schrodinger
+org=blockchainforever
+
+[auth]
+token=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
+
+[log]
+level=debug
+
+[http]
+verify_ssl=false

@@ -1,0 +1,10 @@
+.skeleton-image {
+  &:hover {
+    .hide-rank {
+      @apply hidden;
+    }
+    .inscription-info-wrap {
+      visibility: visible;
+    }
+  }
+}

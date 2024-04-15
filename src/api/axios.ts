@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { message } from 'antd';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { storages } from 'storages';
 
 interface ResponseType<T> {
   code: string;
@@ -10,13 +11,18 @@ interface ResponseType<T> {
 
 class Request {
   instance: AxiosInstance;
-  baseConfig: AxiosRequestConfig = { baseURL: '/api', timeout: 60000 };
+  baseConfig: AxiosRequestConfig = { baseURL: '/api', timeout: 120000 };
 
   constructor(config: AxiosRequestConfig) {
     this.instance = axios.create(Object.assign({}, this.baseConfig, config));
 
     this.instance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
+        // add token
+        const token = JSON.parse(localStorage.getItem(storages.accountInfo) || '{}').token;
+        if (token && !config.baseURL?.includes('cms')) {
+          config.headers = { ...config.headers, Authorization: `Bearer ${token}` };
+        }
         return config;
       },
       (error) => {
@@ -74,15 +80,21 @@ class Request {
           case 502:
           case 503:
           case 504:
-            errMessage = `${error.response.status}: something is wrong in server`;
+            errMessage = `${error.response.status}: something went wrong in server`;
             break;
 
           default:
-            errMessage = `${error.response.status}: something is wrong, please try again later`;
+            errMessage = `${error.response.status}: something went wrong, please try again later`;
             break;
         }
 
-        message.error(errMessage);
+        if (
+          !error.response.config.baseURL?.includes('connect') &&
+          !error.response.config.url?.includes('/token-price') &&
+          !error.response.config.url?.includes('/transaction-fee')
+        ) {
+          message.error(errMessage);
+        }
         return Promise.reject(errMessage);
       },
     );
@@ -100,11 +112,7 @@ class Request {
     return this.instance.post(url, data, config);
   }
 
-  public put<T = any, R = AxiosResponse<T>, D = any>(
-    url: string,
-    data?: D,
-    config?: AxiosRequestConfig,
-  ): Promise<R> {
+  public put<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<R> {
     return this.instance.put(url, data, config);
   }
 
@@ -117,5 +125,7 @@ const tokenRequest = new Request({
   baseURL: '/connect',
 });
 
+const cmsRequest = new Request({ baseURL: '/cms' });
+
 export default new Request({});
-export { tokenRequest };
+export { tokenRequest, cmsRequest };

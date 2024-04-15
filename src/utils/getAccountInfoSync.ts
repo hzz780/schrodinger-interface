@@ -2,10 +2,7 @@ import { ChainId } from '@portkey/types';
 import { did } from '@portkey/did-ui-react';
 import { IDIDWalletInfo } from 'types';
 
-export default async function getAccountInfoSync(
-  chainId: string,
-  didWalletInfo?: Partial<IDIDWalletInfo>,
-) {
+export default async function getAccountInfoSync(chainId: string, didWalletInfo?: Partial<IDIDWalletInfo>) {
   const currentChainId = chainId as ChainId;
   const holder = await did.didWallet.getHolderInfoByContract({
     chainId: currentChainId,

@@ -1,0 +1,6 @@
+.invitee-modal {
+  @apply !text-center !top-[200px];
+  :global(.aelfd-modal-content) {
+    @apply px-8 py-8 rounded-lg border-2 border-solid border-white;
+  }
+}

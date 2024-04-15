@@ -1,0 +1,12 @@
+.info-card {
+  @apply overflow-hidden;
+  .item {
+    @apply w-full flex overflow-hidden;
+    .title {
+      @apply whitespace-nowrap overflow-hidden text-ellipsis text-sm text-neutralSecondary font-semibold ;
+    }
+    .value {
+      @apply whitespace-nowrap overflow-hidden text-ellipsis text-base text-neutralPrimary font-semibold;
+    }
+  }
+}

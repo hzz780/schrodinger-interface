@@ -1,0 +1,68 @@
+/* stylelint-disable no-descending-specificity  */
+.items-side-menu {
+  @apply !border-none h-fit overflow-y-auto overflow-x-hidden;
+}
+
+.items-side-menu :global(.aelfd-menu-submenu:not(:last-child)) {
+  @apply border-0 border-b border-neutralDivider border-solid;
+}
+
+.items-side-menu :global(.aelfd-menu-submenu-title .aelfd-menu-title-content),
+.items-side-menu :global(.aelfd-menu-submenu-selected),
+.items-side-menu :global(.aelfd-menu-submenu-active) {
+  @apply text-neutralTitle;
+}
+
+.items-side-menu :global(.aelfd-menu-submenu-title .aelfd-menu-title-content) {
+  @apply text-lg;
+}
+
+.items-side-menu :global(.aelfd-menu) :global(.aelfd-menu-item) {
+  @apply w-full h-auto !p-0 !m-0 text-sm bg-neutralWhiteBg hover:!bg-neutralWhiteBg active:!bg-neutralWhiteBg rounded-none cursor-default;
+}
+
+.items-side-menu :global(.aelfd-menu-submenu) :global(.aelfd-menu-submenu-title) {
+  @apply w-full !h-[48px] !m-0 py-0 !pl-4 pr-4 lg:pr-5 hover:bg-neutralWhiteBg font-semibold border-t-0 border-r-0 border-l-0;
+}
+
+.items-side-menu :global(.aelfd-menu-submenu .aelfd-menu-submenu-title .aelfd-menu-submenu-expand-icon) {
+  @apply static -translate-y-1/2 ml-2 size-4;
+}
+
+.items-side-menu :global(.aelfd-menu-submenu-open > .aelfd-menu-submenu-title > .aelfd-menu-submenu-expand-icon) {
+  transform: rotate(180deg);
+}
+
+.items-side-menu :global(.aelfd-menu-submenu .aelfd-menu-sub) {
+  @apply !bg-neutralWhiteBg hover:bg-neutralWhiteBg;
+  :global(.aelfd-menu-submenu) {
+    @apply border-none;
+    :global(.aelfd-menu-submenu-title) {
+      @apply hover:bg-neutralHoverBg active:bg-neutralHoverBg rounded-none;
+      :global(.aelfd-menu-title-content) {
+        @apply text-base font-medium;
+      }
+      :global(.aelfd-menu-submenu-expand-icon) {
+        @apply size-[14px];
+      }
+    }
+  }
+}
+
+.dropdown-phone-dark {
+  :global(.aelfd-drawer-header) {
+    @apply px-4 border-neutralDivider;
+  }
+  :global(.aelfd-drawer-body) {
+    @apply p-0;
+  }
+  :global(.aelfd-drawer-footer) {
+    @apply p-4;
+  }
+}
+
+.footer-wrapper {
+  .footer-button {
+    @apply flex-1;
+  }
+}

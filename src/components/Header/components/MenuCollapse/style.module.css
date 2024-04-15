@@ -1,0 +1,23 @@
+.menu-collapse {
+  @apply w-full !h-full rounded-none;
+
+  :global {
+    .aelfd-collapse-item {
+      @apply w-full h-full;
+
+      .aelfd-collapse-header {
+        @apply w-full h-[64px] px-[16px] flex items-center justify-between bg-neutralHoverBg !rounded-none;
+
+        .aelfd-collapse-expand-icon {
+          svg {
+            @apply w-[16px] h-[16px];
+          }
+        }
+      }
+
+      .aelfd-collapse-content-box {
+        @apply w-full p-0;
+      }
+    }
+  }
+}

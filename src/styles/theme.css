@@ -1,7 +1,77 @@
 :root {
-  --brand-base: #1b76e2;
+  --brand-default: #3888ff;
+  --brand-hover: #5a9cff;
+  --brand-pressed: #267af8;
+  --brand-disable: #adceff;
+  --brand-enable: #8cbaff;
+  --brand-bg: #ebf3ff;
+  --neutral-title: #1a1a1a;
+  --neutral-primary: #434343;
+  --neutral-secondary: #919191;
+  --neutral-tertiary: #9f9f9f;
+  --neutral-disable: #b8b8b8;
+  --neutral-border: #e1e1e1;
+  --neutral-divider: #ededed;
+  --neutral-default-bg: #f6f6f6;
+  --neutral-hover-bg: #fafafa;
+  --neutral-white-bg: #fff;
+  --functional-warning: #f90;
+  --functional-warning-bg: #fff3e0;
+  --functional-error: #f53f3f;
+  --functional-error-bg: #fee8e8;
+  --functional-error-hover: #fc7373;
+  --functional-error-pressed: #cf3737;
+  --functional-success: #00b73e;
+  --functional-success-bg: #e0f6e8;
+  --fill-mask-1: rgb(0 0 0 / 60%);
+  --fill-mask-2: rgb(0 0 0 / 80%);
+  --fill-mask-3: rgb(67 67 67 / 30%);
+  --fill-mask-4: rgb(0 0 0 / 50%);
+  --fill-mask-5: rgb(0 0 0 / 85%);
+  --rarity-platinum: #91C0CC;
+  --rarity-bronze: #D2965E;
+  --rarity-silver: #ADC4D5;
+  --rarity-gold: #E3CA69;
+  --rarity-halcyon: #7DC7AD;
+  --rarity-diamond: #AA98FF;
 }
 
 .dark-theme {
-  --brand-base: #136dd7;
+  --neutral-title: #fff;
+
+  /* not adapted to night mode */
+  --brand-default: #3888ff;
+  --brand-hover: #5a9cff;
+  --brand-pressed: #267af8;
+  --brand-disable: #adceff;
+  --brand-enable: #8cbaff;
+  --brand-bg: #ebf3ff;
+  --neutral-primary: #434343;
+  --neutral-secondary: #919191;
+  --neutral-tertiary: #9f9f9f;
+  --neutral-disable: #b8b8b8;
+  --neutral-border: #e1e1e1;
+  --neutral-divider: #ededed;
+  --neutral-default-bg: #f6f6f6;
+  --neutral-hover-bg: #fafafa;
+  --neutral-white-bg: #fff;
+  --functional-warning: #f90;
+  --functional-warning-bg: #fff3e0;
+  --functional-error: #f53f3f;
+  --functional-error-bg: #fee8e8;
+  --functional-error-hover: #fc7373;
+  --functional-error-pressed: #cf3737;
+  --functional-success: #00b73e;
+  --functional-success-bg: #e0f6e8;
+  --fill-mask-1: rgb(0 0 0 / 60%);
+  --fill-mask-2: rgb(0 0 0 / 80%);
+  --fill-mask-3: rgb(67 67 67 / 30%);
+  --fill-mask-4: rgb(0 0 0 / 50%);
+  --fill-mask-5: rgb(0 0 0 / 85%);
+  --rarity-platinum: #91C0CC;
+  --rarity-bronze: #D2965E;
+  --rarity-silver: #ADC4D5;
+  --rarity-gold: #E3CA69;
+  --rarity-halcyon: #7DC7AD;
+  --rarity-diamond: #AA98FF;
 }

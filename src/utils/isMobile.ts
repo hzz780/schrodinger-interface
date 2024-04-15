@@ -118,10 +118,7 @@ export default function isMobile(param?: IsMobileParameter): isMobileResult {
     apple: {
       phone: match(appleIphone) && !match(windowsPhone),
       ipod: match(appleIpod),
-      tablet:
-        !match(appleIphone) &&
-        (match(appleTablet) || isAppleTabletOnIos13(nav)) &&
-        !match(windowsPhone),
+      tablet: !match(appleIphone) && (match(appleTablet) || isAppleTabletOnIos13(nav)) && !match(windowsPhone),
       universal: match(appleUniversal),
       device:
         (match(appleIphone) ||
@@ -137,9 +134,7 @@ export default function isMobile(param?: IsMobileParameter): isMobileResult {
       device: match(amazonPhone) || match(amazonTablet),
     },
     android: {
-      phone:
-        (!match(windowsPhone) && match(amazonPhone)) ||
-        (!match(windowsPhone) && match(androidPhone)),
+      phone: (!match(windowsPhone) && match(amazonPhone)) || (!match(windowsPhone) && match(androidPhone)),
       tablet:
         !match(windowsPhone) &&
         !match(amazonPhone) &&
@@ -147,10 +142,7 @@ export default function isMobile(param?: IsMobileParameter): isMobileResult {
         (match(amazonTablet) || match(androidTablet)),
       device:
         (!match(windowsPhone) &&
-          (match(amazonPhone) ||
-            match(amazonTablet) ||
-            match(androidPhone) ||
-            match(androidTablet))) ||
+          (match(amazonPhone) || match(amazonTablet) || match(androidPhone) || match(androidTablet))) ||
         match(/\bokhttp\b/i),
     },
     windows: {
@@ -176,8 +168,7 @@ export default function isMobile(param?: IsMobileParameter): isMobileResult {
     tablet: false,
   };
 
-  result.any =
-    result.apple.device || result.android.device || result.windows.device || result.other.device;
+  result.any = result.apple.device || result.android.device || result.windows.device || result.other.device;
   // excludes 'other' devices and ipods, targeting touchscreen phones
   result.phone = result.apple.phone || result.android.phone || result.windows.phone;
   result.tablet = result.apple.tablet || result.android.tablet || result.windows.tablet;

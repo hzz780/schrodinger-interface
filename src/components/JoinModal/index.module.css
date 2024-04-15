@@ -1,0 +1,9 @@
+.button-wrapper {
+    :global(.aelfd-btn) {
+        > span {
+            @apply overflow-hidden w-full text-ellipsis;
+
+            word-break: break-all;
+        }
+    }
+}

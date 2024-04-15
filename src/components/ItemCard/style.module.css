@@ -1,0 +1,9 @@
+.item-card-img-wrap {
+  position: relative;
+  .item-card-img img {
+    @apply rounded-b-none;
+  }
+}
+.item-card-img-wrap:hover .inscription-info-wrap {
+  visibility: visible;
+}

@@ -1,0 +1,5 @@
+.radio {
+  :global(.aelfd-image) {
+    @apply w-full h-full;
+  }
+}

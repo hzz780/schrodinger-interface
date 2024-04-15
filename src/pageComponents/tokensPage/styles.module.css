@@ -1,0 +1,3 @@
+.tokensPageContainer {
+  @apply flex flex-col max-w-[2560px] w-full;
+}

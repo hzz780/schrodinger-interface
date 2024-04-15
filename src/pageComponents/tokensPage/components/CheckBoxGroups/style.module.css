@@ -1,0 +1,12 @@
+.checkbox {
+  @apply w-full;
+  :global(.aelfd-col) {
+    @apply hover:!bg-neutralHoverBg active:!bg-neutralHoverBg;
+  }
+  :global(.aelfd-checkbox-wrapper) {
+    @apply w-full pl-4 pr-5;
+  }
+  :global(.aelfd-checkbox + span) {
+    @apply pl-2 pr-0 py-[11px] text-neutralPrimary text-sm;
+  }
+}

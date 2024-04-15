@@ -1,0 +1,74 @@
+.emptyListWrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  align-items: center;
+  text-align: left;
+}
+.emptyImg {
+  width: 57px;
+  height: 56px;
+}
+
+.emptyTips {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #434343;
+}
+
+.emptyGroupWrap {
+  margin-top: 24px;
+  width: 100%;
+}
+
+.emptyGroupTitle {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #919191;
+}
+
+.channelWrap {
+  border: 1px solid #e1e1e1;
+  border-radius: 12px;
+  margin-top: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+}
+
+.channelImg {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 8px;
+}
+
+.channelContent {
+  margin: 0 16px;
+  flex: 1;
+}
+
+.channelTitle {
+  word-break: break-all;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: #434343;
+}
+.channelDescription {
+  word-break: break-all;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #919191;
+}
+
+.arrowWrap {
+  flex-shrink: 0;
+}

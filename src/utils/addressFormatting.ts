@@ -1,4 +1,5 @@
 import AElf from 'aelf-sdk';
+import { store } from 'redux/store';
 import { SupportedELFChainId } from 'types';
 const { decodeAddressRep } = AElf.utils;
 
@@ -7,11 +8,12 @@ export const getOriginalAddress = (address: string) => {
   return address.replace(/^ELF_/, '').replace(/_.*$/, '');
 };
 
-export const addPrefixSuffix = (str: string, ChainId: string) => {
+export const addPrefixSuffix = (str: string, ChainId?: string) => {
   if (!str) return str;
+  const info = store.getState().info.cmsInfo;
   let resStr = str;
   const prefix = 'ELF_';
-  const suffix = `_${ChainId}`;
+  const suffix = `_${ChainId || info?.curChain}`;
   if (!str.startsWith(prefix)) {
     resStr = `${prefix}${resStr}`;
   }
@@ -71,8 +73,7 @@ export const getOmittedStr = (
     [OmittedType.CUSTOM]: { prevLen: 9, endLen: 9, limitLen: 10 },
   };
 
-  const { prevLen, endLen, limitLen } =
-    type === OmittedType.CUSTOM ? params || defaults[type] : defaults[type];
+  const { prevLen, endLen, limitLen } = type === OmittedType.CUSTOM ? params || defaults[type] : defaults[type];
 
   if (str.length > limitLen) {
     return `${str.slice(0, prevLen)}...${str.slice(-endLen)}`;

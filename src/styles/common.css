@@ -1,0 +1,9 @@
+.common-revert-180 {
+  transform: rotate(180deg);
+}
+.common-revert-90 {
+  transform: rotate(90deg);
+}
+.common-revert-negative-90 {
+  transform: rotate(-90deg);
+}

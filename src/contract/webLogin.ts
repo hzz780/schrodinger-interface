@@ -38,15 +38,7 @@ export default class WebLoginInstance {
     this.context = context;
   }
 
-  setMethod({
-    chain,
-    sendMethod,
-    viewMethod,
-  }: {
-    chain: Chain;
-    sendMethod: MethodType;
-    viewMethod: MethodType;
-  }) {
+  setMethod({ chain, sendMethod, viewMethod }: { chain: Chain; sendMethod: MethodType; viewMethod: MethodType }) {
     switch (chain) {
       case SupportedELFChainId.MAIN_NET: {
         this.aelfSendMethod = sendMethod;

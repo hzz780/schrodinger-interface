@@ -1,6 +1,9 @@
 'use client';
-import { NetworkType } from '@portkey/provider-types';
+import { ChainId, NetworkType } from '@portkey/provider-types';
+import { devicesEnv } from '@portkey/utils';
+import type { ExtraWalletNames } from 'aelf-web-login';
 import dynamic from 'next/dynamic';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { store } from 'redux/store';
 
 const APP_NAME = 'schrodinger';
@@ -32,10 +35,14 @@ const WebLoginProviderDynamic = dynamic(
         graphQLUrl: cmsInfo?.graphqlServerV2,
         connectUrl: connectUrlV2 || '',
         requestDefaults: {
-          timeout: cmsInfo?.networkType === 'TESTNET' ? 300000 : 80000,
+          timeout: cmsInfo?.networkTypeV2 === 'TESTNET' ? 300000 : 80000,
           baseURL: serverV2 || '',
         },
         serviceUrl: serverV2,
+        loginConfig: {
+          recommendIndexes: [0, 1],
+          loginMethodsOrder: ['Google', 'Apple', 'Telegram', 'Email'],
+        },
       },
       aelfReact: {
         appName: APP_NAME,
@@ -55,20 +62,30 @@ const WebLoginProviderDynamic = dynamic(
         },
       },
       defaultRpcUrl:
-        (cmsInfo?.[`rpcUrl${String(cmsInfo?.curChain).toUpperCase()}`] as unknown as string) ||
-        cmsInfo?.rpcUrlTDVW ||
-        '',
-      networkType: cmsInfo?.networkType || 'TESTNET',
+        (cmsInfo?.[`rpcUrl${String(cmsInfo.curChain).toUpperCase()}`] as string) || cmsInfo?.rpcUrlTDVW || '',
+      networkType: (cmsInfo?.networkType as 'TESTNET' | 'MAIN') || 'TESTNET',
     });
     return webLogin.WebLoginProvider;
   },
   { ssr: false },
 );
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default ({ children }: { children: React.ReactNode }) => {
-  const info = store.getState().info.cmsInfo;
+  const cmsInfo = store.getState().info.cmsInfo;
+  const [extraWallets, setExtraWallets] = useState<{ extraWallets?: ExtraWalletNames[] }>({});
+
+  const getExtraWallets = useCallback(async () => {
+    const app = await devicesEnv.getPortkeyShellApp();
+    app ? setExtraWallets({}) : setExtraWallets({ extraWallets: ['discover', 'elf'] });
+  }, []);
+
+  useEffect(() => {
+    getExtraWallets();
+  }, [getExtraWallets]);
+
   return (
-    <PortkeyProviderDynamic networkType={info?.networkType} networkTypeV2={info?.networkTypeV2}>
+    <PortkeyProviderDynamic networkType={cmsInfo?.networkType} networkTypeV2={cmsInfo?.networkTypeV2}>
       <WebLoginProviderDynamic
         nightElf={{
           useMultiChain: true,
@@ -82,15 +99,14 @@ export default ({ children }: { children: React.ReactNode }) => {
             v2: true,
           },
         }}
-        extraWallets={['discover']}
+        {...extraWallets}
         discover={{
           autoRequestAccount: true,
           autoLogoutOnDisconnected: true,
           autoLogoutOnNetworkMismatch: true,
           autoLogoutOnAccountMismatch: true,
           autoLogoutOnChainMismatch: true,
-        }}
-      >
+        }}>
         {children}
       </WebLoginProviderDynamic>
     </PortkeyProviderDynamic>

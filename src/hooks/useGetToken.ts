@@ -5,6 +5,9 @@ import { fetchToken } from 'api/request';
 import { message } from 'antd';
 import { useRequest } from 'ahooks';
 import useDiscoverProvider from './useDiscoverProvider';
+import { store } from 'redux/store';
+import { setHasToken } from 'redux/reducer/info';
+import { useCheckJoined } from './useJoin';
 
 const AElf = require('aelf-sdk');
 
@@ -12,11 +15,13 @@ export const useGetToken = () => {
   const { loginState, wallet, getSignature, walletType, version } = useWebLogin();
 
   const { getSignatureAndPublicKey } = useDiscoverProvider();
+  const { checkJoined } = useCheckJoined();
 
   const { runAsync } = useRequest(fetchToken, {
-    retryCount: 3,
+    retryCount: 20,
     manual: true,
     onSuccess(res) {
+      store.dispatch(setHasToken(true));
       localStorage.setItem(
         storages.accountInfo,
         JSON.stringify({
@@ -28,19 +33,30 @@ export const useGetToken = () => {
     },
   });
 
+  const checkTokenValid = useCallback(() => {
+    if (loginState !== WebLoginState.logined) return false;
+    const accountInfo = JSON.parse(localStorage.getItem(storages.accountInfo) || '{}');
+
+    if (accountInfo?.token && Date.now() < accountInfo?.expirationTime && accountInfo.account === wallet.address) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [loginState, wallet.address]);
+
   const getToken = useCallback(async () => {
     if (loginState !== WebLoginState.logined) return;
+    await checkJoined(wallet.address);
+
     const accountInfo = JSON.parse(localStorage.getItem(storages.accountInfo) || '{}');
-    if (
-      accountInfo?.token &&
-      Date.now() < accountInfo?.expirationTime &&
-      accountInfo.account === wallet.address
-    ) {
+    if (accountInfo?.token && Date.now() < accountInfo?.expirationTime && accountInfo.account === wallet.address) {
       return;
     } else {
       localStorage.removeItem(storages.accountInfo);
     }
     const timestamp = Date.now();
+
+    console.log('wallet', wallet.address);
 
     const signInfo = AElf.utils.sha256(`${wallet.address}-${timestamp}`);
 
@@ -62,12 +78,15 @@ export const useGetToken = () => {
       const sign = await getSignature({
         appName: 'schrodinger',
         address: wallet.address,
-        signInfo,
+        signInfo:
+          walletType === WalletType.portkey ? Buffer.from(`${wallet.address}-${timestamp}`).toString('hex') : signInfo,
       });
       if (sign?.errorMessage) {
         message.error(sign.errorMessage);
         return;
       }
+      console.log('sign', sign, wallet);
+
       publicKey = wallet.publicKey || '';
       signature = sign.signature;
       if (walletType === WalletType.elf) {
@@ -88,5 +107,5 @@ export const useGetToken = () => {
     } as ITokenParams);
   }, [loginState, getSignature, wallet]);
 
-  return { getToken };
+  return { getToken, checkTokenValid };
 };

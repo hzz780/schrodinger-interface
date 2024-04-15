@@ -1,0 +1,9 @@
+.subTraitFilter {
+  @apply flex flex-col;
+  .searchWrapper {
+    @apply my-1 ml-4 mr-5;
+  }
+  :global(.aelfd-checkbox-group-item) {
+    @apply w-full pl-4 pr-5 hover:bg-neutralHoverBg active:bg-neutralHoverBg;
+  }
+}
