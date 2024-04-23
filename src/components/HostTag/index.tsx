@@ -6,9 +6,9 @@ import styles from './style.module.css';
 import useResponsive from 'hooks/useResponsive';
 import useGetCustomTheme from 'redux/hooks/useGetCustomTheme';
 import clsx from 'clsx';
+import { Popover } from 'antd-mobile';
 
 export function NavHostTag() {
-  const [open, setOpen] = useState(false);
   const hostName = useMemo(() => getSecondHostName(), []);
   const { isLG } = useResponsive();
   const customTheme = useGetCustomTheme();
@@ -19,28 +19,17 @@ export function NavHostTag() {
     <>
       {hostName && (
         <>
-          <div className={clsx(styles.navHostTag, styles[customTheme.header.theme])} onClick={() => setOpen(true)}>
+          <div className={clsx(styles.navHostTag, styles[customTheme.header.theme])}>
             {!isLG ? (
               <Tooltip color="black" title={hostName} overlayInnerStyle={{ color: 'white' }}>
                 <p className="w-full truncate">{hostStr}</p>
               </Tooltip>
             ) : (
-              <p className="w-full truncate max-w-max">{hostStr}</p>
+              <Popover content={hostName} trigger="click" mode="dark">
+                <p className="w-full truncate max-w-max">{hostStr}</p>
+              </Popover>
             )}
           </div>
-          {!isLG ? null : (
-            <Modal
-              centered
-              open={open}
-              footer={
-                <Button type="primary" className={styles.modalBtn} onClick={() => setOpen(false)}>
-                  OK
-                </Button>
-              }
-              onCancel={() => setOpen(false)}>
-              {hostName}
-            </Modal>
-          )}
         </>
       )}
     </>
@@ -48,7 +37,6 @@ export function NavHostTag() {
 }
 
 export function HomeHostTag() {
-  const [open, setOpen] = useState(false);
   const hostName = useMemo(() => getSecondHostName(), []);
   const { isLG } = useResponsive();
 
@@ -58,29 +46,17 @@ export function HomeHostTag() {
     <>
       {hostName && (
         <>
-          <div className={styles.homeHostTag} onClick={() => setOpen(true)}>
+          <div className={styles.homeHostTag}>
             {!isLG ? (
               <Tooltip title={hostName} color="black" overlayInnerStyle={{ color: 'white' }}>
                 {hostStr}
               </Tooltip>
             ) : (
-              hostStr
+              <Popover content={`Invited by ${hostName}`} trigger="click" mode="dark">
+                <>{hostStr}</>
+              </Popover>
             )}
           </div>
-          {!isLG ? null : (
-            <Modal
-              title="Invited by"
-              centered
-              open={open}
-              footer={
-                <Button type="primary" className={styles.modalBtn} onClick={() => setOpen(false)}>
-                  OK
-                </Button>
-              }
-              onCancel={() => setOpen(false)}>
-              {hostName}
-            </Modal>
-          )}
         </>
       )}
     </>

@@ -1,16 +1,15 @@
 import Login from './components/Login';
-import { store } from 'redux/store';
-import { useCheckLoginAndToken, useWalletService } from 'hooks/useWallet';
+import { useCheckLoginAndToken } from 'hooks/useWallet';
 import { useCallback, useEffect, useState } from 'react';
-import { setLoginTrigger } from 'redux/reducer/info';
 import { useCheckJoined } from 'hooks/useJoin';
 import useAccountModal from './useAccountModal';
 import useLoading from 'hooks/useLoading';
 import { useJoinStatus } from 'redux/hooks';
+import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
 
 export default function Invitee() {
   const isJoin = useJoinStatus();
-  const { isLogin } = useWalletService();
+  const { isLogin } = useGetLoginStatus();
   const { showLoading, closeLoading } = useLoading();
   const [showLogin, setShowLogin] = useState(true);
   const { checkLogin } = useCheckLoginAndToken();
@@ -18,7 +17,6 @@ export default function Invitee() {
   const { getJoinStatus } = useCheckJoined();
 
   const toLogin = useCallback(() => {
-    store.dispatch(setLoginTrigger('login'));
     checkLogin();
   }, [checkLogin]);
 

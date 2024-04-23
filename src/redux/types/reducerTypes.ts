@@ -1,4 +1,5 @@
 import { ICompassProps } from 'components/Header/type';
+import { ListTypeEnum } from 'types';
 import { TEmptyChannelGroup } from 'types/misc';
 
 export enum ThemeType {
@@ -10,16 +11,16 @@ export type InfoStateType = {
   isMobile?: boolean;
   isSmallScreen?: boolean;
   theme: ThemeType;
+  adInfo?: any;
   baseInfo: {
     rpcUrl?: string;
     identityPoolID?: string;
     // some config
   };
-  loginTrigger?: 'join' | 'login';
   cmsInfo?: TCustomizationItemType & TGlobalConfigType;
   itemsFromLocal?: string[];
-  hasToken?: boolean;
   isJoin: boolean;
+  curViewListType: ListTypeEnum;
 };
 
 export type TTradeItem = {
@@ -105,5 +106,27 @@ export type TGlobalConfigType = {
   forestUrl: string;
   s3ImagePrefix: string;
   ifpsPrefix: string;
+  rarityFilterItems: Array<{
+    label: string;
+    value: string;
+  }>;
   [key: string]: any;
+};
+
+export enum LoginState {
+  initial = 'initial',
+  lock = 'lock',
+  eagerly = 'eagerly',
+  logining = 'logining',
+  logined = 'logined',
+  logouting = 'logouting',
+}
+
+export type TLoginStatusType = {
+  loginStatus: {
+    walletStatus: LoginState;
+    isConnectWallet: boolean;
+    hasToken: boolean;
+    isLogin: boolean;
+  };
 };

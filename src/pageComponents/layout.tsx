@@ -5,7 +5,7 @@ import Header from 'components/Header';
 import dynamic from 'next/dynamic';
 
 import { store } from 'redux/store';
-import { setIsMobile } from 'redux/reducer/info';
+import { setAdInfo, setIsMobile } from 'redux/reducer/info';
 import isMobile from 'utils/isMobile';
 import Footer from 'components/Footer';
 import { useWalletInit } from 'hooks/useWallet';
@@ -21,6 +21,9 @@ import useGetCustomTheme from 'redux/hooks/useGetCustomTheme';
 import { isWeChatBrowser } from 'utils/isWeChatBrowser';
 import WeChatGuide from 'components/WeChatGuide';
 import { backgroundStyle } from 'provider/useNavigationGuard';
+import WalletAndTokenInfo from 'utils/walletAndTokenInfo';
+import { useGetToken } from 'hooks/useGetToken';
+import queryString from 'query-string';
 
 const Layout = dynamic(async () => {
   const { useWebLogin, useCallContract } = await import('aelf-web-login').then((module) => module);
@@ -31,6 +34,7 @@ const Layout = dynamic(async () => {
     const customTheme = useGetCustomTheme();
 
     const webLoginContext = useWebLogin();
+    const { getToken } = useGetToken();
 
     const pathname = usePathname();
 
@@ -52,6 +56,10 @@ const Layout = dynamic(async () => {
     }, [pathname]);
 
     useEffect(() => {
+      // store ad tracker
+      const search = queryString.parse(location.search);
+      store.dispatch(setAdInfo(search));
+
       const resize = () => {
         const ua = navigator.userAgent;
         const mobileType = isMobile(ua);
@@ -99,6 +107,11 @@ const Layout = dynamic(async () => {
     const isHiddenLayout = useMemo(() => {
       return ['/assets'].includes(pathname);
     }, [pathname]);
+
+    useEffect(() => {
+      WalletAndTokenInfo.setWallet(webLoginContext.walletType, webLoginContext.wallet, webLoginContext.version);
+      WalletAndTokenInfo.setSignMethod(getToken);
+    }, [getToken, webLoginContext]);
 
     return (
       <>

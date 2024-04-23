@@ -36,10 +36,6 @@ export default function ItemCard({ item, onPress, type }: IItemCard) {
 
   const transformedAmount = useMemo(() => formatTokenPrice(amount, { decimalPlaces: decimals }), [amount, decimals]);
 
-  const rankDisplay = useMemo(() => {
-    return rank && rank !== '0' ? `Rank: ${formatTokenPrice(rank)}` : '';
-  }, [rank]);
-
   const awakenPriceDisplay = useMemo(() => {
     return awakenPrice ? `${formatNumber(awakenPrice)} ELF` : '';
   }, [awakenPrice]);
@@ -75,9 +71,9 @@ export default function ItemCard({ item, onPress, type }: IItemCard) {
           <SkeletonImage
             img={inscriptionImageUri}
             imageSizeType="contain"
-            rank={rankDisplay}
-            tag={`GEN ${generation}`}
-            level={level && `Lv. ${level}`}
+            rank={rank}
+            level={level}
+            generation={generation}
             rarity={describe}
             hideRankHover={true}
             containsInscriptionCode={

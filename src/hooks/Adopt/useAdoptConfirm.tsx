@@ -163,7 +163,7 @@ export const useAdoptConfirm = () => {
             info: {
               name: parentItemInfo.tokenName,
               logo: confirmParams.image,
-              rank: rankInfo && getRankInfoToShow(rankInfo, 'Rank'),
+              rank: rankInfo?.rank,
             },
             id: 'adopt-retry-modal',
             status: Status.ERROR,
@@ -346,7 +346,7 @@ export const useAdoptConfirm = () => {
           info: {
             name: name,
             logo: image,
-            rank: rankInfo && getRankInfoToShow(rankInfo, 'Rank'),
+            rank: rankInfo?.rank,
           },
           status: Status.SUCCESS,
           description: `You have successfully minted the inscription ${name}`,

@@ -3430,10 +3430,10 @@ aelf-sdk@^3.2.40, aelf-sdk@^3.3.0:
     scryptsy "^2.1.0"
     xmlhttprequest "^1.8.0"
 
-aelf-web-login@2.0.1-beta.7:
-  version "2.0.1-beta.7"
-  resolved "https://registry.yarnpkg.com/aelf-web-login/-/aelf-web-login-2.0.1-beta.7.tgz#1366d1995f22b3332953cb8f2125ce7ef12cde6d"
-  integrity sha512-POZbha+opMUiYOy1RTFxOWD/gajZIgtfVn4A4/zUCSb42iaZRdxWO+nU7PDg+1t5j20g/r+vge+05+wUurDLpA==
+aelf-web-login@2.0.1-beta.8:
+  version "2.0.1-beta.8"
+  resolved "https://registry.yarnpkg.com/aelf-web-login/-/aelf-web-login-2.0.1-beta.8.tgz#6d65b965b7905972cb37e28669c86b9529df4b09"
+  integrity sha512-za81rnv4liReI7hqgue59snUxogWUkPwhwWfAuFrqZQQ61b5DGwPSyNrqaReShQ3tL95z8vT88KWQKMCmXTRQQ==
   dependencies:
     "@aelf-react/core" "^0.1.19"
     "@portkey/detect-provider" "2.0.0-alpha.5"
@@ -3570,6 +3570,31 @@ antd-mobile@5.33.0:
     lodash "^4.17.21"
     rc-field-form "~1.27.4"
     rc-util "^5.30.0"
+    react-is "^18.2.0"
+    runes2 "^1.1.2"
+    staged-components "^1.1.3"
+    tslib "^2.5.0"
+    use-sync-external-store "^1.2.0"
+
+antd-mobile@^5.35.0:
+  version "5.35.0"
+  resolved "https://registry.yarnpkg.com/antd-mobile/-/antd-mobile-5.35.0.tgz#72df0cc8c193699197eb664c55d4156b3cf8a000"
+  integrity sha512-UYr8T2Tlw3eXdyDYpWrPu54RWDcon4biI5VWHtMp9XxmSP5tzypRxoseh1ZGE28boQq9FKpSCC6FZ9rN0HXnQg==
+  dependencies:
+    "@floating-ui/dom" "^1.4.2"
+    "@rc-component/mini-decimal" "^1.1.0"
+    "@react-spring/web" "~9.6.1"
+    "@use-gesture/react" "10.3.0"
+    ahooks "^3.7.6"
+    antd-mobile-icons "^0.3.0"
+    antd-mobile-v5-count "^1.0.1"
+    classnames "^2.3.2"
+    dayjs "^1.11.7"
+    deepmerge "^4.3.1"
+    nano-memoize "^3.0.16"
+    rc-field-form "~1.27.4"
+    rc-util "^5.38.1"
+    react-fast-compare "^3.2.2"
     react-is "^18.2.0"
     runes2 "^1.1.2"
     staged-components "^1.1.3"
@@ -7074,6 +7099,11 @@ nano-css@^5.6.1:
     stacktrace-js "^2.0.2"
     stylis "^4.3.0"
 
+nano-memoize@^3.0.16:
+  version "3.0.16"
+  resolved "https://registry.yarnpkg.com/nano-memoize/-/nano-memoize-3.0.16.tgz#454100602713973ac8639bde301e255dd54920ea"
+  integrity sha512-JyK96AKVGAwVeMj3MoMhaSXaUNqgMbCRSQB3trUV8tYZfWEzqUBKdK1qJpfuNXgKeHOx1jv/IEYTM659ly7zUA==
+
 nanoid@^3.3.4, nanoid@^3.3.6, nanoid@^3.3.7:
   version "3.3.7"
   resolved "https://registry.npmmirror.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
@@ -8442,6 +8472,11 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-fast-compare@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
+  integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
 
 react-i18next@^11.18.6:
   version "11.18.6"

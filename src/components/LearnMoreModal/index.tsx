@@ -14,7 +14,7 @@ interface ILearnMoreModalProps {
   item:
     | TSGRItem
     | (TSGRToken & {
-        rank?: string;
+        rank?: number;
       });
 }
 
@@ -82,12 +82,12 @@ function LearnMoreModal({ item }: ILearnMoreModalProps) {
             <div className="text-xs text-[#B8B8B8]">Symbol</div>
             <div className="text-sm text-neutralPrimary">{item.symbol}</div>
           </div>
-          {item?.rank && item.rank !== '0' && (
+          {item?.rank ? (
             <div>
               <div className="text-xs text-[#B8B8B8]">Rank</div>
               <div className="text-sm text-neutralPrimary">{formatTokenPrice(item?.rank)}</div>
             </div>
-          )}
+          ) : null}
 
           <div className="flex flex-row items-center mt-[4px]">
             <XIcon />

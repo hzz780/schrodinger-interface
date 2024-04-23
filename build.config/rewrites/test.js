@@ -1,6 +1,6 @@
 module.exports = [
   { source: '/api/:path*', destination: 'https://schrodingerai.com/api/:path*' },
-  { source: '/cms/:path*', destination: 'http://18.166.65.26:3104/:path*' },
+  { source: '/cms/:path*', destination: 'https://schrodingerai.com/cms/:path*' },
   {
     source: '/schrodingerGQL/:path*',
     destination:

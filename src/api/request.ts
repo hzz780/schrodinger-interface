@@ -1,4 +1,4 @@
-import { ICatsListData } from 'types/tokens';
+import { ICatsListData, TSGRTokenInfo } from 'types/tokens';
 import { TCustomizationItemType, TGlobalConfigType } from 'redux/types/reducerTypes';
 import request, { cmsRequest, tokenRequest } from './axios';
 import qs from 'qs';
@@ -43,6 +43,10 @@ export const catsList = async (data: ICatsListParams): Promise<ICatsListData> =>
   return request.post('/app/cat/list', data);
 };
 
+export const catsListAll = async (data: ICatsListParams): Promise<ICatsListData> => {
+  return request.post('/app/cat/all ', data);
+};
+
 export const getGlobalConfig = async (): Promise<{ data: TGlobalConfigType }> => {
   return cmsRequest.get('/items/schrodingerDefaultConfig');
 };
@@ -57,4 +61,8 @@ export const getAndroidCustomization = async (): Promise<{ data: TCustomizationI
 
 export const getIOSCustomization = async (): Promise<{ data: TCustomizationItemType }> => {
   return cmsRequest.get('/items/schrodingerIOSCustomization');
+};
+
+export const getCatDetail = async (params: ICatDetailParams): Promise<TSGRTokenInfo> => {
+  return request.post('/app/cat/detail', params);
 };

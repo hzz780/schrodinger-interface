@@ -17,6 +17,7 @@ import SyncAdoptModal from 'components/SyncAdoptModal';
 import { AIServerError } from 'utils/formattError';
 import { AdoptActionErrorCode } from 'hooks/Adopt/adopt';
 import useLoading from 'hooks/useLoading';
+import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
 
 const textStyle =
   'block max-w-[84px] lg:max-w-[364px] overflow-hidden whitespace-nowrap text-ellipsis text-sm text-neutralTitle font-medium';
@@ -24,7 +25,8 @@ const textStyle =
 const amountStyle = 'text-sm text-neutralTitle';
 
 export default function StrayCatsPage() {
-  const { isLogin } = useWalletService();
+  const { isLogin } = useGetLoginStatus();
+
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { showLoading, closeLoading } = useLoading();
@@ -149,7 +151,7 @@ export default function StrayCatsPage() {
             <div className="flex items-center">
               <SkeletonImage
                 className="w-[64px] h-[64px] mr-[12px]"
-                tag={`GEN ${record.gen}`}
+                generation={record.gen}
                 img={record.inscriptionImageUri}
               />
               <span className={textStyle}>{tokenName}</span>

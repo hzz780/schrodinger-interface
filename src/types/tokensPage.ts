@@ -1,6 +1,7 @@
 import { ChainId } from '@portkey/types';
-import CheckBoxGroups from './components/CheckBoxGroups';
-import MenuFilter from './components/MenuFilter';
+import CheckBoxGroups from 'components/CheckBoxGroups';
+import MenuFilter from 'components/MenuFilter';
+import { store } from 'redux/store';
 
 export enum FilterType {
   Checkbox = 'Checkbox',
@@ -28,7 +29,7 @@ export enum FilterKeyEnum {
   Rarity = 'Rarity',
 }
 
-export const DEFAULT_FILTER_OPEN_KEYS = [FilterKeyEnum.Chain, FilterKeyEnum.Traits];
+export const DEFAULT_FILTER_OPEN_KEYS = [FilterKeyEnum.Chain, FilterKeyEnum.Rarity];
 
 export type CheckboxItemType = {
   key: FilterKeyEnum;
@@ -36,6 +37,7 @@ export type CheckboxItemType = {
   type: FilterType.Checkbox;
   data: SourceItemType[];
   tips?: string;
+  allItem?: SourceItemType;
 };
 
 export type MenuCheckboxItemType = {
@@ -48,6 +50,17 @@ export type MenuCheckboxItemType = {
 
 export const getFilterList = (ChainId: string): Array<CheckboxItemType | MenuCheckboxItemType> => {
   const filterList = [
+    {
+      key: FilterKeyEnum.Rarity,
+      title: FilterKeyEnum.Rarity,
+      type: FilterType.Checkbox,
+      tips: 'Only Gen-9 Cats support Rarity filtering.',
+      data: store.getState().info.cmsInfo?.rarityFilterItems || [],
+      allItem: {
+        label: 'All',
+        value: 'All',
+      },
+    },
     {
       key: FilterKeyEnum.Chain,
       title: FilterKeyEnum.Chain,
@@ -66,25 +79,15 @@ export const getFilterList = (ChainId: string): Array<CheckboxItemType | MenuChe
       type: FilterType.Checkbox,
       data: [],
     },
-    {
-      key: FilterKeyEnum.Rarity,
-      title: FilterKeyEnum.Rarity,
-      type: FilterType.Checkbox,
-      tips: 'Only Gen-9 Cats support Rarity filtering.',
-      data: [
-        { value: 'Diamond', label: 'Diamond' },
-        { value: 'Emerald', label: 'Emerald' },
-        { value: 'Platinum', label: 'Platinum' },
-        { value: 'Gold', label: 'Gold' },
-        { value: 'Silver', label: 'Silver' },
-        { value: 'Bronze', label: 'Bronze' },
-      ],
-    },
   ];
   return filterList as Array<CheckboxItemType | MenuCheckboxItemType>;
 };
 
 export interface IFilterSelect {
+  [FilterKeyEnum.Rarity]: {
+    type: FilterType.Checkbox;
+    data: Array<any>;
+  };
   [FilterKeyEnum.Chain]: {
     type: FilterType.Checkbox;
     data: SourceItemType[];
@@ -97,14 +100,14 @@ export interface IFilterSelect {
     type: FilterType.Checkbox;
     data: SourceItemType[];
   };
-  [FilterKeyEnum.Rarity]: {
-    type: FilterType.Checkbox;
-    data: Array<any>;
-  };
 }
 
 export const getDefaultFilter = (ChainId: string): IFilterSelect => {
   return {
+    [FilterKeyEnum.Rarity]: {
+      type: FilterType.Checkbox,
+      data: [],
+    },
     [FilterKeyEnum.Chain]: {
       type: FilterType.Checkbox,
       data: [{ value: ChainId, label: `SideChain ${ChainId}`, disabled: true }],
@@ -114,10 +117,6 @@ export const getDefaultFilter = (ChainId: string): IFilterSelect => {
       data: [],
     },
     [FilterKeyEnum.Generation]: {
-      type: FilterType.Checkbox,
-      data: [],
-    },
-    [FilterKeyEnum.Rarity]: {
       type: FilterType.Checkbox,
       data: [],
     },

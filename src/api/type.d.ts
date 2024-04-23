@@ -154,3 +154,8 @@ interface ICatsListParams {
   keyword?: string;
   rarities?: string[];
 }
+
+interface ICatDetailParams {
+  chainId: string;
+  symbol: string;
+}

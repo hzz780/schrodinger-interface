@@ -8,11 +8,13 @@ import { LeftOutlined } from '@ant-design/icons';
 import styles from './style.module.css';
 import { useWalletService } from 'hooks/useWallet';
 import { useCmsInfo } from 'redux/hooks';
+import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
 
 export default function MyAsset() {
   const router = useRouter();
   const { wallet } = useWebLogin();
-  const { isLogin, logout } = useWalletService();
+  const { logout } = useWalletService();
+  const { isLogin } = useGetLoginStatus();
 
   const { PortkeyAssetProvider, Asset } = useComponentFlex();
   const { isShowRampBuy = true, isShowRampSell = true } = useCmsInfo() || {};

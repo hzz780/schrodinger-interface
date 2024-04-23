@@ -7,7 +7,7 @@ export default function TokensPage() {
   return (
     <div className="flex flex-col max-w-[2560px] w-full">
       <TokensInfo />
-      <OwnedItems pageState={ListTypeEnum.All} />
+      <OwnedItems pageState={ListTypeEnum.My} />
     </div>
   );
 }

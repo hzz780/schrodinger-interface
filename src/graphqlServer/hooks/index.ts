@@ -5,6 +5,8 @@ import {
   getStrayCats,
   getSubTraits,
   getTraits,
+  getAllTraits,
+  getAllSubTraits,
 } from '../request';
 import { getGraphQLClient } from '../client';
 import { useCallback } from 'react';
@@ -37,9 +39,19 @@ export const useGetTraits = () => {
   return useCallback((params: TGraphQLParamsType<typeof getTraits>) => getTraits(client, params), [client]);
 };
 
+export const useGetAllTraits = () => {
+  const client = useGraphQLClient();
+  return useCallback((params: TGraphQLParamsType<typeof getAllTraits>) => getAllTraits(client, params), [client]);
+};
+
 export const useGetSubTraits = () => {
   const client = useGraphQLClient();
   return useCallback((params: TGraphQLParamsType<typeof getSubTraits>) => getSubTraits(client, params), [client]);
+};
+
+export const useGetSubAllTraits = () => {
+  const client = useGraphQLClient();
+  return useCallback((params: TGraphQLParamsType<typeof getAllSubTraits>) => getAllSubTraits(client, params), [client]);
 };
 
 export const useGetStrayCats = () => {

@@ -9,8 +9,6 @@ import styles from './style.module.css';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { WalletType, WebLoginEvents, useWebLoginEvent } from 'aelf-web-login';
-import { store } from 'redux/store';
-import { setLoginTrigger } from 'redux/reducer/info';
 import { ReactComponent as MenuIcon } from 'assets/img/menu.svg';
 import { ReactComponent as ArrowIcon } from 'assets/img/right_arrow.svg';
 import { NavHostTag } from 'components/HostTag';
@@ -32,10 +30,16 @@ import MenuCollapse from './components/MenuCollapse/MenuCollapse';
 import { NEED_LOGIN_PAGE } from 'constants/router';
 
 import { useCmsInfo } from 'redux/hooks';
+import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
+import { store } from 'redux/store';
+import { setCurViewListType } from 'redux/reducer/info';
+import { ListTypeEnum } from 'types';
 
 export default function Header() {
   const { checkLogin, checkTokenValid } = useCheckLoginAndToken();
-  const { logout, wallet, isLogin, walletType } = useWalletService();
+  const { logout, wallet, walletType } = useWalletService();
+  const { isLogin } = useGetLoginStatus();
+
   const { isLG } = useResponsive();
   const router = useRouter();
   const marketModal = useModal(MarketModal);
@@ -63,8 +67,14 @@ export default function Header() {
 
       if (schema && NEED_LOGIN_PAGE.includes(schema)) {
         if (!isLogin) {
-          store.dispatch(setLoginTrigger('login'));
-          checkLogin();
+          checkLogin({
+            onSuccess: () => {
+              router.push(schema || '/');
+              if (schema === '/my-cats') {
+                store.dispatch(setCurViewListType(ListTypeEnum.My));
+              }
+            },
+          });
           return;
         }
       }
@@ -85,6 +95,9 @@ export default function Header() {
 
       setMenuModalVisibleModel(ModalViewModel.NONE);
       router.push(schema || '/');
+      if (schema === '/') {
+        store.dispatch(setCurViewListType(ListTypeEnum.All));
+      }
     },
     [checkLogin, isLogin, marketModal, router],
   );
@@ -121,7 +134,12 @@ export default function Header() {
         router.push(path);
         setMenuModalVisibleModel(ModalViewModel.NONE);
       } else {
-        checkLogin();
+        checkLogin({
+          onSuccess: () => {
+            router.push(path);
+            setMenuModalVisibleModel(ModalViewModel.NONE);
+          },
+        });
       }
     },
     [checkLogin, checkTokenValid, router],
@@ -196,7 +214,6 @@ export default function Header() {
         className="!rounded-lg lg:!rounded-[12px]"
         disabled={!logoutComplete}
         onClick={() => {
-          store.dispatch(setLoginTrigger('login'));
           checkLogin();
         }}>
         Log in

@@ -1,10 +1,7 @@
 import { Flex } from 'antd';
-import { BGCSVG, LeftSVG, ELFSVG, BGCMobile, LeftMobile, ELFMobile } from 'assets/img/home';
+import { LeftSVG, ELFSVG, ELFMobile } from 'assets/img/home';
 import useResponsive from 'hooks/useResponsive';
 import { useCheckLoginAndToken } from 'hooks/useWallet';
-import { store } from 'redux/store';
-import { setLoginTrigger } from 'redux/reducer/info';
-import styles from './style.module.css';
 import { Button } from 'aelf-design';
 import { ENVIRONMENT } from 'constants/url';
 import Image from 'next/image';
@@ -52,7 +49,6 @@ export default function TokensHome() {
             type="primary"
             size="large"
             onClick={() => {
-              store.dispatch(setLoginTrigger('login'));
               checkLogin();
             }}>
             Connect Wallet

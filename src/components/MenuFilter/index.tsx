@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { Flex } from 'antd';
 import { ISubTraitFilterInstance, SubTraitFilter } from 'components/SubTraitFilter';
-import { FilterKeyEnum, FilterType, MenuCheckboxItemDataType, MenuCheckboxSelectType } from '../../type';
+import { FilterKeyEnum, FilterType, MenuCheckboxItemDataType, MenuCheckboxSelectType } from 'types/tokensPage';
 
 export interface IMenuFilterProps {
   label: string;

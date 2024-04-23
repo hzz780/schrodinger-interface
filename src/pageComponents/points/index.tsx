@@ -1,16 +1,17 @@
 import { getPoints } from 'api/request';
 import { TokenEarnList } from 'components/EarnList';
-import { useCheckLoginAndToken, useWalletService } from 'hooks/useWallet';
+import { useWalletService } from 'hooks/useWallet';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useRequest } from 'ahooks';
 import { useTimeoutFn } from 'react-use';
 import useLoading from 'hooks/useLoading';
+import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
 
 export default function PointsPage() {
-  const { isLogin, wallet } = useWalletService();
+  const { wallet } = useWalletService();
+  const { isLogin } = useGetLoginStatus();
   const router = useRouter();
-  const { checkTokenValid } = useCheckLoginAndToken();
   const { showLoading, closeLoading } = useLoading();
 
   const getPointsData = useCallback(
@@ -36,7 +37,7 @@ export default function PointsPage() {
   });
 
   useTimeoutFn(() => {
-    if (!isLogin && !checkTokenValid()) {
+    if (!isLogin) {
       router.push('/');
     }
   }, 3000);

@@ -15,9 +15,12 @@ import { PrimaryDomainName } from 'constants/common';
 import clsx from 'clsx';
 import { useJoinStatus } from 'redux/hooks';
 import { appEnvironmentShare } from 'utils/appEnvironmentShare';
+import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
 
 function Referral() {
-  const { wallet, isLogin } = useWalletService();
+  const { wallet } = useWalletService();
+  const { isLogin } = useGetLoginStatus();
+
   const [, setCopied] = useCopyToClipboard();
   const { isLG } = useResponsive();
   const isJoin = useJoinStatus();

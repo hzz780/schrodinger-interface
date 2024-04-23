@@ -19,7 +19,6 @@ import { useWalletService } from 'hooks/useWallet';
 const pageSize = 32;
 export default function List() {
   const [total, setTotal] = useState(0);
-  const [current, SetCurrent] = useState(1);
   const [dataSource, setDataSource] = useState<TSGRItem[]>([]);
   const { showLoading, closeLoading, visible: isLoading } = useLoading();
   const cmsInfo = useCmsInfo();
@@ -112,7 +111,7 @@ export default function List() {
               ...data[item],
               level: curCatsRankProbability.levelInfo?.level,
               token: curCatsRankProbability.levelInfo?.token,
-              rank: `${curCatsRankProbability.rank}`,
+              rank: curCatsRankProbability.rank,
               describe: curCatsRankProbability.levelInfo?.describe,
               awakenPrice: `${curCatsRankProbability.levelInfo?.awakenPrice}`,
             };

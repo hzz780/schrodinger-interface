@@ -5,8 +5,7 @@ const useGetStoreInfo = () => {
   const info = useSelector(selectInfo);
   return {
     cmsInfo: info.cmsInfo,
-    loginTrigger: info.loginTrigger,
-    hasToken: info.hasToken,
+    curViewListType: info.curViewListType,
   };
 };
 

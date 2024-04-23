@@ -8,6 +8,7 @@ import DataReducer, { dataSlice } from './reducer/data';
 import UserInfoReducer, { userInfoSlice } from './reducer/userInfo';
 import AssetsReducer, { assetsSlice } from './reducer/assets';
 import CustomThemeReducer, { customThemeSlice } from './reducer/customTheme';
+import LoginStatusReducer, { loginStatusSlice } from './reducer/loginStatus';
 
 const rootReducer = combineReducers({
   [infoSlice.name]: InfoReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   [userInfoSlice.name]: UserInfoReducer,
   [assetsSlice.name]: AssetsReducer,
   [customThemeSlice.name]: CustomThemeReducer,
+  [loginStatusSlice.name]: LoginStatusReducer,
 });
 
 const makeStore = () => {

@@ -52,3 +52,7 @@ code {
 .ant-message {
   @apply z-[10011];
 }
+
+.aelfd-menu .aelfd-menu-submenu-expand-icon {
+  width: 16px;
+}

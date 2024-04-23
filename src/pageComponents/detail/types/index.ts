@@ -35,3 +35,8 @@ export interface ISGRDetailTrait {
   value: string;
   percent: number;
 }
+
+export enum PageFrom {
+  ALL = 'from',
+  MY = 'my',
+}

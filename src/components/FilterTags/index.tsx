@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import { FilterType, ItemsSelectSourceType, IFilterSelect, TagItemType, SEARCH_TAG_ITEM_TYPE } from '../../type';
+import { FilterType, ItemsSelectSourceType, IFilterSelect, TagItemType, SEARCH_TAG_ITEM_TYPE } from 'types/tokensPage';
 import styles from './style.module.css';
 import { ReactComponent as CloseIcon } from 'assets/img/close.svg';
 import { Ellipsis } from 'antd-mobile';

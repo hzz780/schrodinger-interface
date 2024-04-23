@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import SkeletonImage from 'components/SkeletonImage';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styles from './index.module.css';
 
 export interface IInfoCard {
   logo?: string;
   name: string;
   tag?: string;
-  rank?: string;
+  rank?: string | number | ReactNode;
   subName?: string;
   items?: {
     label: string;

@@ -19,7 +19,7 @@ import { checkAIService } from 'api/request';
 import { useAdoptConfirm } from './useAdoptConfirm';
 import SyncAdoptModal from 'components/SyncAdoptModal';
 import { AIServerError } from 'utils/formattError';
-import { getRankInfoToShow } from 'utils/formatTraits';
+import { AdTracker } from 'utils/ad';
 
 const useAdoptHandler = () => {
   const adoptActionModal = useModal(AdoptActionModal);
@@ -66,7 +66,7 @@ const useAdoptHandler = () => {
             name: parentItemInfo.tokenName,
             tag: parentItemInfo.generation ? `GEN ${parentItemInfo.generation}` : '',
             subName: parentItemInfo.symbol,
-            rank: rankInfo && getRankInfoToShow(rankInfo, 'Rank'),
+            rank: rankInfo?.rank,
           },
 
           inputProps: {
@@ -92,7 +92,11 @@ const useAdoptHandler = () => {
             reject(AdoptActionErrorCode.cancel);
           },
           onConfirm: (amount: string) => {
+            AdTracker.trackEvent('adopt', {
+              generation: parentItemInfo?.generation,
+            });
             adoptActionModal.hide();
+
             resolve(amount as string);
           },
         });
@@ -185,15 +189,16 @@ const useAdoptHandler = () => {
       try {
         showLoading();
         const parentPrice = await getTokenPrice(parentItemInfo.symbol);
-        closeLoading();
         await checkAIServer();
 
+        closeLoading();
         const amount = await adoptInput(parentItemInfo, account, parentPrice, rankInfo);
         const { adoptId, outputAmount, symbol, tokenName } = await approveAdopt({ amount, account, parentItemInfo });
 
         await adoptConfirm(parentItemInfo, { adoptId, symbol, outputAmount, tokenName }, account);
       } catch (error) {
         console.log(error, 'error==');
+        closeLoading();
         if (error === AdoptActionErrorCode.cancel) return;
         const errorMessage = getAdoptErrorMessage(error, 'adopt error');
         singleMessage.error(errorMessage);

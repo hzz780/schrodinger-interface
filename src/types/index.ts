@@ -1,7 +1,7 @@
 import { Accounts, ChainId } from '@portkey/provider-types';
 import { IBlockchainWallet } from '@portkey/types';
 import { ManagerInfoType } from '@portkey/did-ui-react';
-import { DiscoverInfo, PortkeyInfo } from 'aelf-web-login';
+import { DiscoverInfo, PortkeyInfo, PortkeyInfoV1, SignatureData, WalletType, WebLoginState } from 'aelf-web-login';
 
 export type TBaseTokenInfo = {
   decimals: number;
@@ -94,9 +94,9 @@ export type WalletInfoType = {
   address: string;
   publicKey?: string;
   token?: string;
-  aelfChainAddress?: string;
   discoverInfo?: DiscoverInfo;
-  portkeyInfo?: PortkeyInfo;
+  portkeyInfo?: PortkeyInfo | PortkeyInfoV1;
+  aelfChainAddress?: string;
 };
 
 export enum DeviceTypeEnum {
@@ -105,4 +105,25 @@ export enum DeviceTypeEnum {
   Windows = 'windows',
   Macos = 'macos',
   Web = 'web',
+}
+
+export interface IAccountInfo {
+  account?: string;
+  token?: string;
+  expirationTime?: number;
+}
+
+export interface ICreateTokenParams {
+  signMethod: () => Promise<void>;
+  walletInfo: WalletInfoType;
+  walletType: WalletType;
+  version: string;
+  loginState?: WebLoginState;
+  onError?: <T>(error: T) => void;
+  signInfo?: SignatureData;
+}
+
+export enum ListTypeEnum {
+  My = 1,
+  All = 2,
 }

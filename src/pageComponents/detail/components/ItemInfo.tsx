@@ -30,7 +30,7 @@ export default function ItemInfo({
     learnMoreModal.show({
       item: {
         ...detail,
-        rank: rankInfo?.rank ? `${rankInfo?.rank}` : '',
+        rank: rankInfo?.rank,
       },
     });
   }, [detail, learnMoreModal, rankInfo?.rank]);
@@ -156,8 +156,8 @@ export default function ItemInfo({
       {isLearnMoreShow && (
         <div className="flex justify-end mt-[16px]">
           <div className="cursor-pointer flex items-center" onClick={onLearnMoreClick}>
-            <span className="text-neutralTitle text-base">Learn More</span>
-            <RightArrowSVG className="ml-[8px]" />
+            <span className="text-brandDefault text-sm font-medium">Learn More</span>
+            <RightArrowSVG className="w-[14px] h-[14px] ml-[8px] fill-brandDefault" />
           </div>
         </div>
       )}

@@ -50,34 +50,73 @@ export type TGetSchrodingerDetail = (
 
 export type TGetTraitsParams = {
   input: {
-    chainId: String;
-    address: String;
+    chainId: string;
+    address: string;
   };
 };
+
+export type TGetAllTraitsParams = {
+  input: {
+    chainId: string;
+  };
+};
+
+export type TTraitsResult = {
+  traitsFilter: TBaseFilterTrait[];
+  generationFilter: TFilterGeneration[];
+};
+
 export type TGetTraitsResult = {
-  getTraits: {
-    traitsFilter: TBaseFilterTrait[];
-    generationFilter: TFilterGeneration[];
-  };
+  getTraits: TTraitsResult;
 };
+
+export type TGetAllTraitsResult = {
+  getAllTraits: TTraitsResult;
+};
+
 export type TGetTraits = (client: TGraphQLClient, params: TGetTraitsParams) => TCommonGraphQLResult<TGetTraitsResult>;
 
-type TGetSubTraitsParams = {
+export type TGetAllTraits = (
+  client: TGraphQLClient,
+  params: TGetAllTraitsParams,
+) => TCommonGraphQLResult<TGetAllTraitsResult>;
+
+export type TGetSubTraitsParams = {
   input: {
     chainId: string;
     address: string;
     traitType: string;
   };
 };
-type TGetSubTraitsResult = {
+
+export type TGetSubAllTraitsParams = {
+  input: {
+    chainId: string;
+    traitType: string;
+  };
+};
+
+export type TGetSubTraitsResult = {
   getTraits: {
     traitsFilter: TFilterTrait[];
   };
 };
+
+export type TGetSubAllTraitsResult = {
+  getAllTraits: {
+    traitsFilter: TFilterTrait[];
+  };
+};
+
 export type TGetSubTraits = (
   client: TGraphQLClient,
   params: TGetSubTraitsParams,
 ) => TCommonGraphQLResult<TGetSubTraitsResult>;
+
+export type TGetSubAllTraits = (
+  client: TGraphQLClient,
+  params: TGetSubAllTraitsParams,
+) => TCommonGraphQLResult<TGetSubAllTraitsResult>;
 
 export type TGetStrayCatsParams = {
   input: {

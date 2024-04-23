@@ -12,17 +12,14 @@ import {
   MenuCheckboxItemDataType,
   FilterKeyEnum,
   CheckboxItemType,
-  MenuCheckboxItemType,
-} from '../../type';
+} from 'types/tokensPage';
+import { ListTypeEnum } from 'types';
 import clsx from 'clsx';
-import { Flex, Layout, MenuProps, Radio } from 'antd';
-import type { RadioChangeEvent } from 'antd';
+import { Flex, Layout, MenuProps } from 'antd';
 import CommonSearch from 'components/CommonSearch';
 import { ISubTraitFilterInstance } from 'components/SubTraitFilter';
 import FilterTags from '../FilterTags';
 import { CollapseForPC, CollapseForPhone } from '../FilterContainer';
-import FilterMenuEmpty from '../FilterMenuEmpty';
-// import ScrollContent from '../ScrollContent';
 import { divDecimals, getPageNumber } from 'utils/calculate';
 import { useDebounceFn } from 'ahooks';
 import useResponsive from 'hooks/useResponsive';
@@ -31,18 +28,28 @@ import { ReactComponent as QuestionSVG } from 'assets/img/icons/question.svg';
 import useLoading from 'hooks/useLoading';
 import { useWalletService } from 'hooks/useWallet';
 import { store } from 'redux/store';
-import { useGetTraits } from 'graphqlServer';
+import {
+  TGetAllTraitsParams,
+  TGetAllTraitsResult,
+  TGetTraitsParams,
+  TGetTraitsResult,
+  useGetAllTraits,
+  useGetTraits,
+} from 'graphqlServer';
 import { ZERO } from 'constants/misc';
 import { TSGRItem } from 'types/tokens';
 import { ToolTip } from 'aelf-design';
-import { catsList } from 'api/request';
+import { catsList, catsListAll } from 'api/request';
 import ScrollContent from 'components/ScrollContent';
 import { CardType } from 'components/ItemCard';
 import useColumns from 'hooks/useColumns';
 import { EmptyList } from 'components/EmptyList';
 import { useRouter } from 'next/navigation';
+import qs from 'qs';
+import { ItemType } from 'antd/es/menu/hooks/useItems';
+import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
 
-export default function OwnedItems() {
+export default function OwnedItems({ pageState = ListTypeEnum.All }: { pageState?: ListTypeEnum }) {
   const { wallet } = useWalletService();
   // 1024 below is the mobile display
   const { isLG, is2XL, is3XL, is4XL, is5XL } = useResponsive();
@@ -57,7 +64,7 @@ export default function OwnedItems() {
   const defaultFilter = useMemo(() => getDefaultFilter(curChain), [curChain]);
   const [filterSelect, setFilterSelect] = useState<IFilterSelect>(defaultFilter);
   const [tempFilterSelect, setTempFilterSelect] = useState<IFilterSelect>(defaultFilter);
-  const [current, SetCurrent] = useState(1);
+  const [current, setCurrent] = useState(1);
   const [dataSource, setDataSource] = useState<TSGRItem[]>();
   const { showLoading, closeLoading, visible: isLoading } = useLoading();
   const pageSize = 32;
@@ -66,6 +73,12 @@ export default function OwnedItems() {
   const router = useRouter();
   const walletAddress = useMemo(() => wallet.address, [wallet.address]);
   const filterListRef = useRef<any>();
+  const walletAddressRef = useRef(walletAddress);
+  const { isLogin } = useGetLoginStatus();
+
+  useEffect(() => {
+    walletAddressRef.current = walletAddress;
+  }, [walletAddress]);
 
   const siderWidth = useMemo(() => {
     if (is2XL) {
@@ -81,67 +94,48 @@ export default function OwnedItems() {
     }
   }, [is2XL, is3XL, is4XL, is5XL]);
 
-  const options = [
-    { label: 'My cats', value: 1 },
-    { label: 'View all', value: 2 },
-  ];
-
-  const [pageState, setPageState] = useState(1);
-  const [searchAddress, setSearchAddress] = useState<string | undefined>(undefined);
-
-  const handleRadioChange = ({ target: { value } }: RadioChangeEvent) => {
-    setPageState(value);
-    // clear all status
-    handleBaseClearAll();
-    const filterList: any[] = [];
-    Object.assign(filterList, filterListRef.current);
-
-    if (value === 2) {
-      delete filterList[3];
-    }
-    setFilterList(filterList);
-    setSearchAddress(value === 1 ? undefined : walletAddress);
-  };
-
-  useEffect(() => {
-    fetchData({ params: requestParams });
-  }, [searchAddress]);
-
   const defaultRequestParams = useMemo(() => {
     const filter = getFilter(defaultFilter);
     return {
       ...filter,
-      address: walletAddress,
       skipCount: 0,
       maxResultCount: pageSize,
     };
-  }, [defaultFilter, walletAddress]);
+  }, [defaultFilter]);
+
   const requestParams = useMemo(() => {
     const filter = getFilter(filterSelect);
     return {
       ...filter,
-      address: pageState === 1 ? walletAddress : undefined,
       skipCount: getPageNumber(current, pageSize),
       maxResultCount: pageSize,
       keyword: searchParam,
-      searchAddress,
     };
-  }, [filterSelect, walletAddress, current, searchParam, pageState]);
+  }, [filterSelect, current, searchParam]);
 
   const fetchData = useCallback(
-    async ({ params, loadMore = false }: { params: ICatsListParams; loadMore?: boolean }) => {
+    async ({
+      params,
+      loadMore = false,
+      requestType,
+    }: {
+      params: ICatsListParams;
+      loadMore?: boolean;
+      requestType: ListTypeEnum;
+    }) => {
       if (!params.chainId) {
         return;
       }
       showLoading();
+      const requestCatApi = requestType === ListTypeEnum.My ? catsList : catsListAll;
       try {
-        const res = await catsList(params);
-
-        setTotal(res.totalCount ?? 0);
+        const res = await requestCatApi(params);
+        const total = res.totalCount ?? 0;
+        setTotal(total);
         const hasSearch =
           params.traits?.length || params.generations?.length || !!params.keyword || params.rarities?.length;
         if (!hasSearch) {
-          setOwnedTotal(res.totalCount ?? 0);
+          setOwnedTotal(total);
         }
         const data = (res.data || []).map((item) => {
           return {
@@ -155,6 +149,9 @@ export default function OwnedItems() {
         } else {
           setDataSource(data);
         }
+        setCurrent((count) => {
+          return ++count;
+        });
       } catch {
         setDataSource((preData) => preData || []);
       } finally {
@@ -165,66 +162,86 @@ export default function OwnedItems() {
   );
 
   useEffect(() => {
-    fetchData({
-      params: defaultRequestParams,
-    });
-  }, [fetchData, defaultRequestParams]);
-
-  const getTraits = useGetTraits();
-
-  const getFilterListData = useCallback(async () => {
-    try {
-      const {
-        data: {
-          getTraits: { traitsFilter, generationFilter },
-        },
-      } = await getTraits({
-        input: {
-          chainId: curChain,
-          address: walletAddress,
-        },
-      });
-      const traitsList =
-        traitsFilter?.map((item) => ({
-          label: item.traitType,
-          value: item.traitType,
-          count: ZERO.plus(item.amount).toFormat(),
-        })) || [];
-      const generationList =
-        generationFilter?.map((item) => ({
-          label: String(item.generationName),
-          value: item.generationName,
-          count: ZERO.plus(item.generationAmount).toFormat(),
-        })) || [];
-      setFilterList((preFilterList) => {
-        const newFilterList = preFilterList.map((item) => {
-          if (item.key === FilterKeyEnum.Traits) {
-            return { ...item, data: traitsList };
-          } else if (item.key === FilterKeyEnum.Generation) {
-            return { ...item, data: generationList } as CheckboxItemType;
-          }
-          return item;
-        });
-        filterListRef.current = newFilterList;
-        return newFilterList;
-      });
-    } catch (error) {
-      console.log('getTraitList error', error);
-    }
-  }, [curChain, getTraits, walletAddress]);
+    setDataSource([]);
+    setTotal(0);
+  }, [pageState]);
 
   useEffect(() => {
-    getFilterListData();
-  }, [getFilterListData]);
+    fetchData({
+      params: defaultRequestParams,
+      requestType: pageState,
+    });
+  }, [defaultRequestParams, fetchData, pageState, isLogin]);
+
+  const getTraits = useGetTraits();
+  const getAllTraits = useGetAllTraits();
+
+  const getFilterListData = useCallback(
+    async ({ type }: { type: ListTypeEnum }) => {
+      const currentWalletAddress = walletAddressRef.current;
+      const requestApi = type === ListTypeEnum.All ? getAllTraits : getTraits;
+      const reqParams: {
+        chainId: string;
+        address?: string;
+      } = {
+        chainId: curChain,
+        address: currentWalletAddress,
+      };
+      if (type === ListTypeEnum.All) {
+        delete reqParams.address;
+      }
+      try {
+        const { data } = await requestApi({
+          input: reqParams,
+        } as TGetTraitsParams & TGetAllTraitsParams);
+        const { traitsFilter, generationFilter } =
+          type === ListTypeEnum.All ? (data as TGetAllTraitsResult).getAllTraits : (data as TGetTraitsResult).getTraits;
+        const traitsList =
+          traitsFilter?.map((item) => ({
+            label: item.traitType,
+            value: item.traitType,
+            count: ZERO.plus(item.amount).toFormat(),
+          })) || [];
+        const generationList =
+          generationFilter?.map((item) => ({
+            label: String(item.generationName),
+            value: item.generationName,
+            count: ZERO.plus(item.generationAmount).toFormat(),
+          })) || [];
+        setFilterList((preFilterList) => {
+          const newFilterList = preFilterList.map((item) => {
+            if (item.key === FilterKeyEnum.Traits) {
+              return { ...item, data: traitsList };
+            } else if (item.key === FilterKeyEnum.Generation) {
+              return { ...item, data: generationList } as CheckboxItemType;
+            }
+            return item;
+          });
+          filterListRef.current = newFilterList;
+          return newFilterList;
+        });
+      } catch (error) {
+        console.log('getTraitList error', error);
+      }
+    },
+    [curChain, getAllTraits, getTraits],
+  );
+
+  useEffect(() => {
+    getFilterListData({ type: pageState });
+  }, [getFilterListData, pageState]);
 
   const applyFilter = useCallback(
     (newFilterSelect: IFilterSelect = tempFilterSelect) => {
       setFilterSelect(newFilterSelect);
       const filter = getFilter(newFilterSelect);
-      SetCurrent(1);
-      fetchData({ params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize) } });
+      setCurrent(1);
+      fetchData({
+        params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize) },
+        requestType: pageState,
+      });
     },
-    [tempFilterSelect, fetchData, requestParams],
+    [tempFilterSelect, fetchData, requestParams, pageState],
   );
 
   const filterChange = useCallback(
@@ -235,7 +252,7 @@ export default function OwnedItems() {
         applyFilter(newFilterSelect);
       }
     },
-    [filterSelect, isMobile, collapsed, applyFilter, pageState],
+    [filterSelect, isMobile, collapsed, applyFilter],
   );
 
   const compChildRefs = useMemo(() => {
@@ -281,59 +298,58 @@ export default function OwnedItems() {
   );
 
   const collapseItems = useMemo(() => {
-    return filterList?.map((item) => {
-      const value = tempFilterSelect[item.key]?.data;
-      let children: Required<MenuProps>['items'] = [];
-      if (item.type === FilterType.Checkbox) {
-        const Comp = getComponentByType(item.type);
-        children = [
-          {
-            key: item.key,
-            label: <Comp dataSource={item} defaultValue={value} onChange={filterChange} />,
-          },
-        ];
-      } else if (item.type === FilterType.MenuCheckbox) {
-        const Comp = getComponentByType(item.type);
-        if (item.data.length === 0) {
-          children = [
-            {
-              key: item.key,
-              label: <FilterMenuEmpty />,
-            },
-          ];
-        } else {
-          children = item.data.map((subItem) => {
-            return {
-              key: subItem.value,
-              label: <Comp label={subItem.label} count={subItem.count} />,
-              children: [
-                {
-                  key: subItem.value,
-                  label: (
-                    <Comp.child
-                      ref={compChildRefs[subItem.value]}
-                      itemKey={item.key}
-                      parentLabel={subItem.label}
-                      parentValue={subItem.value}
-                      value={value as MenuCheckboxItemDataType[]}
-                      onChange={filterChange}
-                    />
-                  ),
-                },
-              ],
-            };
-          });
+    return filterList
+      ?.map((item) => {
+        const value = tempFilterSelect[item.key]?.data;
+        let children: Required<MenuProps>['items'] = [];
+        if (item.type === FilterType.Checkbox) {
+          const Comp = getComponentByType(item.type);
+          if (item.data.length) {
+            children = [
+              {
+                key: item.key,
+                label: <Comp dataSource={item} defaultValue={value} onChange={filterChange} />,
+              },
+            ];
+          }
+        } else if (item.type === FilterType.MenuCheckbox) {
+          const Comp = getComponentByType(item.type);
+          if (item.data.length) {
+            children = item.data.map((subItem) => {
+              return {
+                key: subItem.value,
+                label: <Comp label={subItem.label} count={subItem.count} />,
+                children: [
+                  {
+                    key: subItem.value,
+                    label: (
+                      <Comp.child
+                        ref={compChildRefs[subItem.value]}
+                        itemKey={item.key}
+                        parentLabel={subItem.label}
+                        parentValue={subItem.value}
+                        value={value as MenuCheckboxItemDataType[]}
+                        onChange={filterChange}
+                      />
+                    ),
+                  },
+                ],
+              };
+            });
+          }
         }
-      }
-      return {
-        key: item.key,
-        label: renderCollapseItemsLabel({
-          title: item.title,
-          tips: item?.tips,
-        }),
-        children,
-      };
-    });
+        return children.length
+          ? {
+              key: item.key,
+              label: renderCollapseItemsLabel({
+                title: item.title,
+                tips: item?.tips,
+              }),
+              children,
+            }
+          : undefined;
+      })
+      .filter((i) => i) as ItemType[];
   }, [filterList, tempFilterSelect, renderCollapseItemsLabel, filterChange, compChildRefs]);
 
   const collapsedChange = () => {
@@ -342,8 +358,11 @@ export default function OwnedItems() {
 
   const { run } = useDebounceFn(
     (value) => {
-      SetCurrent(1);
-      fetchData({ params: { ...requestParams, keyword: value, skipCount: getPageNumber(1, pageSize) } });
+      setCurrent(1);
+      fetchData({
+        params: { ...requestParams, keyword: value, skipCount: getPageNumber(1, pageSize) },
+        requestType: pageState,
+      });
     },
     {
       wait: 500,
@@ -351,7 +370,7 @@ export default function OwnedItems() {
   );
 
   const handleBaseClearAll = useCallback(() => {
-    SetCurrent(1);
+    setCurrent(1);
     setFilterSelect(defaultFilter);
     setTempFilterSelect(defaultFilter);
   }, [defaultFilter]);
@@ -359,16 +378,22 @@ export default function OwnedItems() {
   const handleFilterClearAll = useCallback(() => {
     handleBaseClearAll();
     const filter = getFilter(defaultFilter);
-    fetchData({ params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize) } });
+    fetchData({
+      params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize) },
+      requestType: pageState,
+    });
     setCollapsed(false);
-  }, [defaultFilter, fetchData, handleBaseClearAll, requestParams]);
+  }, [defaultFilter, fetchData, handleBaseClearAll, pageState, requestParams]);
 
   const handleTagsClearAll = useCallback(() => {
     setSearchParam('');
     handleBaseClearAll();
     const filter = getFilter(defaultFilter);
-    fetchData({ params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize), keyword: '' } });
-  }, [defaultFilter, fetchData, handleBaseClearAll, requestParams]);
+    fetchData({
+      params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize), keyword: '' },
+      requestType: pageState,
+    });
+  }, [defaultFilter, fetchData, handleBaseClearAll, pageState, requestParams]);
 
   const symbolChange = (e: any) => {
     setSearchParam(e.target.value);
@@ -377,8 +402,11 @@ export default function OwnedItems() {
 
   const clearSearchChange = () => {
     setSearchParam('');
-    SetCurrent(1);
-    fetchData({ params: { ...requestParams, keyword: '', skipCount: getPageNumber(1, pageSize) } });
+    setCurrent(1);
+    fetchData({
+      params: { ...requestParams, keyword: '', skipCount: getPageNumber(1, pageSize) },
+      requestType: pageState,
+    });
   };
 
   const hasMore = useMemo(() => {
@@ -391,15 +419,15 @@ export default function OwnedItems() {
 
   const loadMoreData = useCallback(() => {
     if (isLoading || !hasMore) return;
-    SetCurrent(current + 1);
     fetchData({
       params: {
         ...requestParams,
-        skipCount: getPageNumber(current + 1, pageSize),
+        skipCount: getPageNumber(current, pageSize),
       },
       loadMore: true,
+      requestType: pageState,
     });
-  }, [isLoading, hasMore, current, fetchData, requestParams]);
+  }, [isLoading, hasMore, current, fetchData, requestParams, pageState]);
 
   const emptyText = useMemo(() => {
     return (
@@ -410,12 +438,35 @@ export default function OwnedItems() {
       )
     );
   }, [dataSource, ownedTotal]);
+
   const onPress = useCallback(
     (item: TSGRItem) => {
-      router.push(`/detail?symbol=${item.symbol}&address=${item.address}`);
+      const params = qs.stringify({
+        symbol: item.symbol,
+        from: pageState === ListTypeEnum.All ? 'all' : 'my',
+      });
+
+      router.push(`/detail?${params}`);
     },
-    [router],
+    [pageState, router],
   );
+
+  useEffect(() => {
+    // clear all status
+    handleBaseClearAll();
+  }, [handleBaseClearAll, pageState]);
+
+  const renderTotalAmount = useMemo(() => {
+    if (pageState === ListTypeEnum.All) {
+      return <span className="text-2xl font-semibold">{`${total} ${total > 1 ? 'Cats' : 'Cat'}`}</span>;
+    }
+    return (
+      <div>
+        <span className="text-2xl font-semibold pr-[8px]">Amount Owned</span>
+        <span className="text-base font-semibold">({total})</span>
+      </div>
+    );
+  }, [pageState, total]);
 
   return (
     <div>
@@ -423,17 +474,7 @@ export default function OwnedItems() {
         className="pb-2 border-0 border-b border-solid border-neutralDivider text-neutralTitle w-full"
         align="center"
         justify="space-between">
-        <div>
-          <span className="text-2xl font-semibold pr-[8px]">Amount Owned</span>
-          <span className="text-base font-semibold">({total})</span>
-        </div>
-        <Radio.Group
-          className="min-w-[179px]"
-          options={options}
-          onChange={handleRadioChange}
-          value={pageState}
-          optionType="button"
-        />
+        {renderTotalAmount}
       </Flex>
       <Layout>
         {isMobile ? (

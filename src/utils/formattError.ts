@@ -9,6 +9,8 @@ export const AIServerError =
 export const TransactionFeeNotEnough =
   'Failed to be enrolled. Please transfer some ELF to this address before you try again.';
 
+export const LoginFailed = 'Login failed!';
+
 enum SourceErrorType {
   Error1 = 'Operation canceled',
   Error2 = 'You closed the prompt without any action',

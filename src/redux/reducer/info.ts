@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AppState } from 'redux/store';
 import { HYDRATE } from 'next-redux-wrapper';
 import { InfoStateType, ThemeType } from 'redux/types/reducerTypes';
+import { ListTypeEnum } from 'types';
 
 const initialState: InfoStateType = {
   isMobile: false,
@@ -12,6 +13,7 @@ const initialState: InfoStateType = {
   theme: ThemeType.light,
   itemsFromLocal: [],
   isJoin: false,
+  curViewListType: ListTypeEnum.All,
 };
 
 // Actual Slice
@@ -19,6 +21,22 @@ export const infoSlice = createSlice({
   name: 'info',
   initialState,
   reducers: {
+    setAdInfo(state, action) {
+      try {
+        const payload = action.payload;
+        const keys =
+          Object.keys(payload).filter((key) => {
+            return ['utm_campaign', 'utm_content', 'utm_medium', 'utm_source'].includes(key);
+          }) || [];
+        const adInfo = {} as unknown as any;
+        keys.forEach((k: string) => {
+          adInfo[k] = payload[k];
+        });
+        state.adInfo = adInfo;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     setIsMobile(state, action) {
       state.isMobile = action.payload;
     },
@@ -32,12 +50,6 @@ export const infoSlice = createSlice({
     setIsJoin(state, action) {
       state.isJoin = action.payload;
     },
-    setLoginTrigger(state, action) {
-      state.loginTrigger = action.payload;
-    },
-    setHasToken(state, action) {
-      state.hasToken = action.payload;
-    },
     setTheme(state, action) {
       state.theme = action.payload;
       localStorage?.setItem('theme', action.payload);
@@ -46,6 +58,9 @@ export const infoSlice = createSlice({
       } else {
         document.documentElement.classList.remove('dark-theme');
       }
+    },
+    setCurViewListType(state, action) {
+      state.curViewListType = action.payload;
     },
   },
 
@@ -60,7 +75,7 @@ export const infoSlice = createSlice({
   },
 });
 
-export const { setIsMobile, setItemsFromLocal, setTheme, setCmsInfo, setIsJoin, setLoginTrigger, setHasToken } =
+export const { setIsMobile, setItemsFromLocal, setTheme, setCmsInfo, setIsJoin, setCurViewListType, setAdInfo } =
   infoSlice.actions;
 export const selectInfo = (state: AppState) => state.info;
 export const getJoinStats = (state: AppState) => state.info.isJoin;

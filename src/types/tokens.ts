@@ -23,7 +23,7 @@ export type TSGRItem = TBaseSGRToken & {
   adoptTime: number;
   traits: ITrait[];
   level?: string;
-  rank?: string;
+  rank?: number;
   rarity?: string;
   describe?: string;
   awakenPrice?: string;
@@ -42,3 +42,10 @@ export interface ICatsListData {
   totalCount: number;
   data: TSGRItem[];
 }
+
+export type TSGRTokenInfo = GenerateType<
+  TSGRToken & {
+    address?: string;
+    holderAmount?: number;
+  }
+>;
