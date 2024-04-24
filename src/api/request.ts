@@ -1,5 +1,5 @@
 import { ICatsListData, TSGRTokenInfo } from 'types/tokens';
-import { TCustomizationItemType, TGlobalConfigType } from 'redux/types/reducerTypes';
+import { IRankListData, TCustomizationItemType, TGlobalConfigType } from 'redux/types/reducerTypes';
 import request, { cmsRequest, tokenRequest } from './axios';
 import qs from 'qs';
 
@@ -65,4 +65,8 @@ export const getIOSCustomization = async (): Promise<{ data: TCustomizationItemT
 
 export const getCatDetail = async (params: ICatDetailParams): Promise<TSGRTokenInfo> => {
   return request.post('/app/cat/detail', params);
+};
+
+export const getRankList = async (): Promise<{ data: IRankListData }> => {
+  return cmsRequest.get('/items/ranking_list');
 };

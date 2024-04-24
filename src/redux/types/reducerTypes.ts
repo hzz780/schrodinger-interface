@@ -106,6 +106,10 @@ export type TGlobalConfigType = {
   forestUrl: string;
   s3ImagePrefix: string;
   ifpsPrefix: string;
+  rankListEntrance?: {
+    open?: boolean;
+    title?: string;
+  };
   rarityFilterItems: Array<{
     label: string;
     value: string;
@@ -130,3 +134,21 @@ export type TLoginStatusType = {
     isLogin: boolean;
   };
 };
+
+export interface IRankList {
+  scores: string;
+  address: string;
+}
+
+export interface IRankListData {
+  lp: {
+    title?: string;
+    pageTitle?: string;
+    description?: string[];
+    rules?: {
+      title?: string;
+      rulesList?: string[];
+    };
+    list: IRankList[];
+  };
+}

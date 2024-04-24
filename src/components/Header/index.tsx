@@ -4,10 +4,11 @@ import { useCheckLoginAndToken, useWalletService } from 'hooks/useWallet';
 import { ReactComponent as MenuMySVG } from 'assets/img/menu-my.svg';
 import { ReactComponent as ExitSVG } from 'assets/img/exit.svg';
 import { ReactComponent as CloseSVG } from 'assets/img/close.svg';
+import { ReactComponent as LeftArrow } from 'assets/img/icons/left-arrow.svg';
 import { Modal } from 'antd';
 import styles from './style.module.css';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { WalletType, WebLoginEvents, useWebLoginEvent } from 'aelf-web-login';
 import { ReactComponent as MenuIcon } from 'assets/img/menu.svg';
 import { ReactComponent as ArrowIcon } from 'assets/img/right_arrow.svg';
@@ -27,7 +28,7 @@ import useGetCustomTheme from 'redux/hooks/useGetCustomTheme';
 import { CustomThemeType } from 'redux/types/reducerTypes';
 import MenuDropdown from './components/MenuDropdown';
 import MenuCollapse from './components/MenuCollapse/MenuCollapse';
-import { NEED_LOGIN_PAGE } from 'constants/router';
+import { SHOW_RANKING_ENTRY, NEED_LOGIN_PAGE } from 'constants/router';
 
 import { useCmsInfo } from 'redux/hooks';
 import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
@@ -44,6 +45,7 @@ export default function Header() {
   const router = useRouter();
   const marketModal = useModal(MarketModal);
   const customTheme = useGetCustomTheme();
+  const pathname = usePathname();
 
   const [menuModalVisibleModel, setMenuModalVisibleModel] = useState<ModalViewModel>(ModalViewModel.NONE);
   const cmsInfo = useCmsInfo();
@@ -317,6 +319,19 @@ export default function Header() {
           caution, as user data may be subject to deletion.
         </p>
       )}
+      {SHOW_RANKING_ENTRY.includes(pathname) && cmsInfo?.rankListEntrance?.open && cmsInfo?.rankListEntrance?.title ? (
+        <p
+          className={clsx(
+            'w-full p-[16px] text-sm flex items-center justify-center text-white font-medium text-center bg-brandDisable cursor-pointer',
+          )}
+          onClick={() => {
+            router.push('/rank-list');
+          }}>
+          <span className="flex-1 max-w-max">{cmsInfo.rankListEntrance.title}</span>
+
+          <LeftArrow className="fill-white scale-50" />
+        </p>
+      ) : null}
 
       <div className="px-[16px] lg:px-[40px] h-[60px] lg:h-[80px] mx-auto flex justify-between items-center w-full">
         <div className="flex flex-1 overflow-hidden justify-start items-center" onClick={handleRoute}>
