@@ -1,0 +1,7 @@
+.scroll-alert {
+    @apply w-full h-full;
+
+    &.alert-notice {
+        @apply bg-warning100 border-warning500;
+    }
+}

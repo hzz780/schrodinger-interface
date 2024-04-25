@@ -48,6 +48,9 @@ module.exports = {
         rarityHalcyon: 'var(--rarity-halcyon)',
         rarityDiamond: 'var(--rarity-diamond)',
         fillMask5: 'var(--fill-mask-5)',
+        warning100: 'var(--warning-100)',
+        warning500: 'var(--warning-500)',
+        warning600: 'var(--warning-600)',
       },
       fontSize: {
         xxs: ['10px', '16px'],

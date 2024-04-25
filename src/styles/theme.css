@@ -34,6 +34,9 @@
   --rarity-gold: #E3CA69;
   --rarity-halcyon: #7DC7AD;
   --rarity-diamond: #AA98FF;
+  --warning-100: #FFF7F2;
+  --warning-600: #F90;
+  --warning-500: #FFB272;
 }
 
 .dark-theme {
@@ -74,4 +77,7 @@
   --rarity-gold: #E3CA69;
   --rarity-halcyon: #7DC7AD;
   --rarity-diamond: #AA98FF;
+  --warning-100: #FFF7F2;
+  --warning-600: #F90;
+  --warning-500: #FFB272;
 }

@@ -26,7 +26,7 @@ import useResponsive from 'hooks/useResponsive';
 import { ReactComponent as CollapsedSVG } from 'assets/img/collapsed.svg';
 import { ReactComponent as QuestionSVG } from 'assets/img/icons/question.svg';
 import useLoading from 'hooks/useLoading';
-import { useWalletService } from 'hooks/useWallet';
+import { useCheckLoginAndToken, useWalletService } from 'hooks/useWallet';
 import { store } from 'redux/store';
 import {
   TGetAllTraitsParams,
@@ -38,7 +38,7 @@ import {
 } from 'graphqlServer';
 import { ZERO } from 'constants/misc';
 import { TSGRItem } from 'types/tokens';
-import { ToolTip } from 'aelf-design';
+import { Button, ToolTip } from 'aelf-design';
 import { catsList, catsListAll } from 'api/request';
 import ScrollContent from 'components/ScrollContent';
 import { CardType } from 'components/ItemCard';
@@ -48,8 +48,16 @@ import { useRouter } from 'next/navigation';
 import qs from 'qs';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
+import ScrollAlert, { IScrollAlertItem } from 'components/ScrollAlert';
+import { setCurViewListType } from 'redux/reducer/info';
 
-export default function OwnedItems({ pageState = ListTypeEnum.All }: { pageState?: ListTypeEnum }) {
+export default function OwnedItems({
+  pageState = ListTypeEnum.All,
+  noticeData,
+}: {
+  pageState?: ListTypeEnum;
+  noticeData?: IScrollAlertItem[];
+}) {
   const { wallet } = useWalletService();
   // 1024 below is the mobile display
   const { isLG, is2XL, is3XL, is4XL, is5XL } = useResponsive();
@@ -75,6 +83,7 @@ export default function OwnedItems({ pageState = ListTypeEnum.All }: { pageState
   const filterListRef = useRef<any>();
   const walletAddressRef = useRef(walletAddress);
   const { isLogin } = useGetLoginStatus();
+  const { checkLogin } = useCheckLoginAndToken();
 
   useEffect(() => {
     walletAddressRef.current = walletAddress;
@@ -451,6 +460,19 @@ export default function OwnedItems({ pageState = ListTypeEnum.All }: { pageState
     [pageState, router],
   );
 
+  const toMyCats = useCallback(() => {
+    if (isLogin) {
+      router.push('/my-cats');
+    } else {
+      checkLogin({
+        onSuccess: () => {
+          router.push('/my-cats');
+          store.dispatch(setCurViewListType(ListTypeEnum.My));
+        },
+      });
+    }
+  }, [checkLogin, isLogin, router]);
+
   useEffect(() => {
     // clear all status
     handleBaseClearAll();
@@ -458,7 +480,13 @@ export default function OwnedItems({ pageState = ListTypeEnum.All }: { pageState
 
   const renderTotalAmount = useMemo(() => {
     if (pageState === ListTypeEnum.All) {
-      return <span className="text-2xl font-semibold">{`${total} ${total > 1 ? 'Cats' : 'Cat'}`}</span>;
+      return (
+        <span
+          className="text-2xl font-semibold min-w-max"
+          style={{
+            width: siderWidth,
+          }}>{`${total} ${total > 1 ? 'Cats' : 'Cat'}`}</span>
+      );
     }
     return (
       <div>
@@ -466,15 +494,39 @@ export default function OwnedItems({ pageState = ListTypeEnum.All }: { pageState
         <span className="text-base font-semibold">({total})</span>
       </div>
     );
-  }, [pageState, total]);
+  }, [pageState, siderWidth, total]);
 
   return (
     <div>
+      {isLG && noticeData?.length ? (
+        <div className="flex-1 mb-[24px] overflow-hidden">
+          <ScrollAlert data={noticeData} type="notice" />
+        </div>
+      ) : null}
       <Flex
         className="pb-2 border-0 border-b border-solid border-neutralDivider text-neutralTitle w-full"
         align="center"
         justify="space-between">
         {renderTotalAmount}
+        {pageState === ListTypeEnum.All ? (
+          <div
+            className={clsx(
+              'flex-1 flex items-center overflow-hidden',
+              noticeData?.length ? 'justify-end lg:justify-between' : 'justify-end',
+            )}>
+            {!isLG && noticeData?.length ? (
+              <div className="flex-1 mr-[40px] overflow-hidden h-[48px]">
+                <ScrollAlert data={noticeData} type="notice" />
+              </div>
+            ) : null}
+
+            {!isLG ? (
+              <Button type="primary" size="large" onClick={toMyCats}>
+                Get Your Own Cat
+              </Button>
+            ) : null}
+          </div>
+        ) : null}
       </Flex>
       <Layout>
         {isMobile ? (
@@ -540,6 +592,14 @@ export default function OwnedItems({ pageState = ListTypeEnum.All }: { pageState
           />
         </Layout>
       </Layout>
+
+      {isLG && pageState === ListTypeEnum.All ? (
+        <div className="flex z-[60] fixed bottom-0 left-0 flex-row w-full p-[16px] bg-neutralWhiteBg border-0 border-t border-solid border-neutralDivider ">
+          <Button className="w-full" type="primary" size="large" onClick={toMyCats}>
+            Get Your Own Cat
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }
