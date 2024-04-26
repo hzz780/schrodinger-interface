@@ -7,6 +7,7 @@ import {
   GET_TRAITS_QUERY,
   GET_TRAITS_ALL_QUERY,
   GET_SUB_TRAITS_ALL_QUERY,
+  NFT_ACTIVITY_LIST_BY_CONDITION,
 } from '../queries';
 import {
   TGetAllTraits,
@@ -17,6 +18,7 @@ import {
   TGetSubAllTraits,
   TGetSubTraits,
   TGetTraits,
+  TNftActivityListByCondition,
 } from '../types';
 
 export const getSchrodingerList: TGetSchrodingerList = (client, params) => {
@@ -71,6 +73,13 @@ export const getStrayCats: TGetStrayCats = (client, params) => {
 export const getLatestSchrodingerList: TGetLatestSchrodingerList = (client, params) => {
   return client.query({
     query: GET_LATEST_SCHRODINGER_LIST_QUERY,
+    variables: params,
+  });
+};
+
+export const nftActivityListByCondition: TNftActivityListByCondition = (client, params) => {
+  return client.query({
+    query: NFT_ACTIVITY_LIST_BY_CONDITION,
     variables: params,
   });
 };

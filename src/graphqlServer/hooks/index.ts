@@ -7,6 +7,7 @@ import {
   getTraits,
   getAllTraits,
   getAllSubTraits,
+  nftActivityListByCondition,
 } from '../request';
 import { getGraphQLClient } from '../client';
 import { useCallback } from 'react';
@@ -63,6 +64,20 @@ export const useGetLatestSchrodingerList = () => {
   const client = useGraphQLClient();
   return useCallback(
     (params: TGraphQLParamsType<typeof getLatestSchrodingerList>) => getLatestSchrodingerList(client, params),
+    [client],
+  );
+};
+
+// forest
+export const useForestGraphQLClient = () => {
+  const cmsInfo = useCmsInfo();
+  return getGraphQLClient(cmsInfo?.graphqlForest || '');
+};
+
+export const useNftActivityListByCondition = () => {
+  const client = useForestGraphQLClient();
+  return useCallback(
+    (params: TGraphQLParamsType<typeof nftActivityListByCondition>) => nftActivityListByCondition(client, params),
     [client],
   );
 };

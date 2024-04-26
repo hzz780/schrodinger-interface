@@ -322,7 +322,7 @@ export default function Header() {
       {SHOW_RANKING_ENTRY.includes(pathname) && cmsInfo?.rankListEntrance?.open && cmsInfo?.rankListEntrance?.title ? (
         <p
           className={clsx(
-            'w-full p-[16px] text-sm flex items-center justify-center text-white font-medium text-center bg-brandDisable cursor-pointer',
+            'w-full p-[16px] text-sm flex items-center justify-center text-white font-medium text-center bg-brandDefault cursor-pointer',
           )}
           onClick={() => {
             router.push('/rank-list');

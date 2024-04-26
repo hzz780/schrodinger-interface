@@ -2,7 +2,7 @@ import { getRankList } from 'api/request';
 import { useCallback, useMemo, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import useLoading from 'hooks/useLoading';
-import { IRankList } from 'redux/types/reducerTypes';
+import { IKOLRulesSection, IRankList, IRulesSection } from 'redux/types/reducerTypes';
 import { OmittedType, addPrefixSuffix, getOmittedStr } from 'utils/addressFormatting';
 import { Table, ToolTip } from 'aelf-design';
 import TableEmpty from 'components/TableEmpty';
@@ -23,6 +23,15 @@ export default function PointsPage() {
   const [description, setDescription] = useState<string[]>();
   const [rulesTitle, setRulesTitle] = useState<string>();
   const [rulesList, setRulesList] = useState<string[]>();
+  const [rulesSection, setRulesSection] = useState<IRulesSection>();
+  const [kolRulesSection, setKolRulesSection] = useState<IKOLRulesSection>();
+  const [subdomain, setSubdomain] = useState<{
+    title?: string;
+    description?: string[];
+    list?: (IRankList & {
+      link: string;
+    })[];
+  }>();
   const router = useRouter();
   const { isLG } = useResponsive();
 
@@ -36,6 +45,9 @@ export default function PointsPage() {
     setRulesTitle(data.lp.rules?.title);
     setRulesList(data.lp.rules?.rulesList);
     setPageTitle(data.lp.pageTitle);
+    setRulesSection(data.lp.rules?.rulesSection);
+    setKolRulesSection(data.lp.rules?.kolRulesSection);
+    setSubdomain(data?.subdomain);
   }, [closeLoading, showLoading]);
 
   const renderCell = (value: string) => {
@@ -44,6 +56,23 @@ export default function PointsPage() {
 
   const renderTitle = (value: string) => {
     return <span className="text-neutralSecondary font-medium text-base">{value}</span>;
+  };
+
+  const renderDescription = (description?: string[]) => {
+    if (description?.length) {
+      return (
+        <span className="flex flex-col">
+          {description.map((item, index) => {
+            return (
+              <span key={index} className="text-base font-medium text-neutralSecondary mt-[8px]">
+                {item}
+              </span>
+            );
+          })}
+        </span>
+      );
+    }
+    return null;
   };
 
   const columns: TableColumnsType<IRankList> = useMemo(() => {
@@ -88,6 +117,61 @@ export default function PointsPage() {
     ];
   }, [isLG]);
 
+  const kolColumns: TableColumnsType<
+    IRankList & {
+      link: string;
+    }
+  > = useMemo(() => {
+    return [
+      {
+        title: renderTitle('TOP 20'),
+        dataIndex: 'index',
+        key: 'index',
+        width: 100,
+        render: (_, _record, index) => {
+          return renderCell(`${index + 1}`);
+        },
+      },
+      {
+        title: renderTitle('Personalised Links'),
+        dataIndex: 'link',
+        key: 'link',
+        width: 200,
+        render: (link) => {
+          return renderCell(`https://${link}`);
+        },
+      },
+      {
+        title: renderTitle('LP Scores'),
+        dataIndex: 'scores',
+        key: 'scores',
+        width: 200,
+        render: (scores) => {
+          return renderCell(formatTokenPrice(scores));
+        },
+      },
+      {
+        title: renderTitle('Address'),
+        dataIndex: 'address',
+        key: 'address',
+        width: 200,
+        render: (address) => {
+          return (
+            <CommonCopy toCopy={addPrefixSuffix(address)}>
+              {isLG ? (
+                renderCell(getOmittedStr(addPrefixSuffix(address), OmittedType.ADDRESS))
+              ) : (
+                <ToolTip trigger={'hover'} title={addPrefixSuffix(address)}>
+                  {renderCell(getOmittedStr(addPrefixSuffix(address), OmittedType.ADDRESS))}
+                </ToolTip>
+              )}
+            </CommonCopy>
+          );
+        },
+      },
+    ];
+  }, [isLG]);
+
   useEffectOnce(() => {
     rankList();
   });
@@ -112,26 +196,16 @@ export default function PointsPage() {
         {rulesTitle || rulesList?.length ? (
           <div className="flex flex-col mt-[24px]">
             {rulesTitle ? <span className="text-xl font-semibold">{rulesTitle}</span> : null}
-            <RulesList />
+            <RulesList rulesSection={rulesSection} kolRulesSection={kolRulesSection} />
           </div>
         ) : null}
 
         <div className="mt-[32px]">
           <div className="flex flex-col mt-[24px] mb-[24px]">
             {title ? <span className="text-xl font-semibold">{title}</span> : null}
-            {description?.length ? (
-              <span className="flex flex-col">
-                {description.map((item, index) => {
-                  return (
-                    <span key={index} className="text-base font-medium text-neutralSecondary mt-[8px]">
-                      {item}
-                    </span>
-                  );
-                })}
-              </span>
-            ) : null}
+            {renderDescription(description)}
           </div>
-          <div className="max-w-[1000px]">
+          <div className="max-w-full lg:max-w-[1000px] overflow-x-auto">
             <Table
               dataSource={list}
               columns={columns}
@@ -146,6 +220,30 @@ export default function PointsPage() {
             />
           </div>
         </div>
+
+        {subdomain ? (
+          <div className="mt-[32px]">
+            <div className="flex flex-col mt-[24px] mb-[24px]">
+              {subdomain?.title ? <span className="text-xl font-semibold">{subdomain?.title}</span> : null}
+              {renderDescription(subdomain?.description)}
+            </div>
+
+            <div className="max-w-full lg:max-w-[1000px] overflow-x-auto">
+              <Table
+                dataSource={subdomain?.list}
+                columns={kolColumns}
+                loading={visible}
+                pagination={null}
+                locale={{
+                  emptyText: <TableEmpty description="No data yet." />,
+                }}
+                scroll={{
+                  x: 'max-content',
+                }}
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

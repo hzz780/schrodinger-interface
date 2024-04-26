@@ -1,9 +1,74 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from 'react';
+import { Table } from 'aelf-design';
+import { TableColumnsType } from 'antd';
+import React, { useMemo } from 'react';
+import { IKOLRulesSection, IKOLRulesSectionData, IRulesSection, IRulesSectionData } from 'redux/types/reducerTypes';
 
 const textStyle = 'text-base font-medium text-neutralSecondary mt-[8px] mb-[16px]';
 
-function RulesList() {
+const renderCell = (value: string) => {
+  return <span className="text-neutralTitle font-medium text-sm">{value}</span>;
+};
+
+function RulesList({
+  rulesSection,
+  kolRulesSection,
+}: {
+  rulesSection?: IRulesSection;
+  kolRulesSection?: IKOLRulesSection;
+}) {
+  const rewardDetailsColum: TableColumnsType<IRulesSectionData> = useMemo(() => {
+    if (rulesSection?.header?.length) {
+      return rulesSection.header.map((item) => {
+        return {
+          title: item.title,
+          dataIndex: item.key,
+          key: item.key,
+          width: item.width || 100,
+          render: (value, _record, index) => {
+            return renderCell(item.key === 'index' ? `${index + 1}` : value);
+          },
+        };
+      });
+    } else {
+      return [];
+    }
+  }, [rulesSection?.header]);
+
+  const kolRewardDetailsColum: TableColumnsType<IKOLRulesSectionData> = useMemo(() => {
+    if (kolRulesSection?.header?.length) {
+      return kolRulesSection.header.map((item) => {
+        return {
+          title: item.title,
+          dataIndex: item.key,
+          key: item.key,
+          width: item.width || 100,
+          render: (value, _record, index) => {
+            return renderCell(item.key === 'index' ? `${index + 1}` : value);
+          },
+        };
+      });
+    } else {
+      return [];
+    }
+  }, [kolRulesSection?.header]);
+
+  const rewardDetails: IRulesSectionData[] = useMemo(() => {
+    if (rulesSection?.data?.length) {
+      return rulesSection.data;
+    } else {
+      return [];
+    }
+  }, [rulesSection?.data]);
+
+  const kolRewardDetails: IKOLRulesSectionData[] = useMemo(() => {
+    if (kolRulesSection?.data?.length) {
+      return kolRulesSection.data;
+    } else {
+      return [];
+    }
+  }, [kolRulesSection?.data]);
+
   return (
     <>
       <span className={textStyle}>
@@ -19,12 +84,36 @@ function RulesList() {
         </a>
         , and click "Add Liquidity" to contribute to our $SGR/ELF liquidity pool.
       </span>
+      {rewardDetailsColum?.length && rewardDetails.length ? (
+        <div className="mt-[8px] mb-[16px] w-max max-w-full overflow-x-auto">
+          <Table
+            dataSource={rewardDetails}
+            columns={rewardDetailsColum}
+            pagination={null}
+            scroll={{
+              x: 'max-content',
+            }}
+          />
+        </div>
+      ) : null}
       <span className={textStyle}>
         Every $1 of provided liquidity during the campaign duration earns you 99 points per day, and daily snapshots
         will be taken to track your contributions. These daily points accumulated will count your total points. When the
         campaign ends on 29 April 2024, the top 40 participants, ranked by total points accumulated during the campaign
         duration, will share the pool of 16,000 $SGR tokens.
       </span>
+      {kolRewardDetailsColum?.length && kolRewardDetails.length ? (
+        <div className="mt-[8px] mb-[16px] w-max max-w-full overflow-x-auto">
+          <Table
+            dataSource={kolRewardDetails}
+            columns={kolRewardDetailsColum}
+            pagination={null}
+            scroll={{
+              x: 'max-content',
+            }}
+          />
+        </div>
+      ) : null}
       <span className={textStyle}>
         An additional 2,000 $SGR tokens will be distributed among participants who use their personalised Project
         Schrodinger link to invite friends and community members to contribute to the $SGR/ELF liquidity pool on

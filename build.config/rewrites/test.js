@@ -6,6 +6,10 @@ module.exports = [
     destination:
       'https://test-indexer.schrodingerai.com/SchrodingerIndexer_DApp/SchrodingerIndexerPluginSchema/graphql/:path*',
   },
+  {
+    source: '/forestGQL/:path*',
+    destination: 'https://test-indexer.eforest.finance/AElfIndexer_Forest/ForestIndexerPluginSchema/graphql/:path*',
+  },
   { source: '/connect/:path*', destination: 'https://schrodingerai.com/connect/:path*' },
   {
     source: '/AElfIndexer_DApp/PortKeyIndexerCASchema/:path*',

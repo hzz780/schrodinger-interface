@@ -1,4 +1,5 @@
 import { ICompassProps } from 'components/Header/type';
+import { TNftActivityListByConditionInput } from 'graphqlServer';
 import { ListTypeEnum } from 'types';
 import { TEmptyChannelGroup } from 'types/misc';
 
@@ -103,6 +104,8 @@ export type TGlobalConfigType = {
   tokenMainAddress: string;
   tokenSideAddress: string;
   graphqlSchrodinger: string;
+  graphqlForest: string;
+  nftActivityListFilter: TNftActivityListByConditionInput;
   forestUrl: string;
   s3ImagePrefix: string;
   ifpsPrefix: string;
@@ -114,6 +117,8 @@ export type TGlobalConfigType = {
     label: string;
     value: string;
   }>;
+  forestActivity?: string;
+  showNftQuantity?: number;
   [key: string]: any;
 };
 
@@ -140,6 +145,34 @@ export interface IRankList {
   address: string;
 }
 
+export interface IRulesSectionData {
+  size: string;
+  ranking: string;
+  rewards: string;
+  inviter: string;
+}
+
+export interface IKOLRulesSectionData {
+  ranking: string;
+  rewards: string;
+}
+
+export interface IRulesSectionHeader {
+  title: string;
+  width: number;
+  key: string;
+}
+
+export interface IRulesSection {
+  header: IRulesSectionHeader[];
+  data: IRulesSectionData[];
+}
+
+export interface IKOLRulesSection {
+  header: IRulesSectionHeader[];
+  data: IKOLRulesSectionData[];
+}
+
 export interface IRankListData {
   lp: {
     title?: string;
@@ -148,7 +181,16 @@ export interface IRankListData {
     rules?: {
       title?: string;
       rulesList?: string[];
+      rulesSection?: IRulesSection;
+      kolRulesSection?: IKOLRulesSection;
     };
     list: IRankList[];
+  };
+  subdomain?: {
+    title?: string;
+    description?: string[];
+    list?: (IRankList & {
+      link: string;
+    })[];
   };
 }

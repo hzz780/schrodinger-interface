@@ -44,7 +44,7 @@ import ScrollContent from 'components/ScrollContent';
 import { CardType } from 'components/ItemCard';
 import useColumns from 'hooks/useColumns';
 import { EmptyList } from 'components/EmptyList';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import qs from 'qs';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
@@ -58,6 +58,7 @@ export default function OwnedItems({
   pageState?: ListTypeEnum;
   noticeData?: IScrollAlertItem[];
 }) {
+  const pathname = usePathname();
   const { wallet } = useWalletService();
   // 1024 below is the mobile display
   const { isLG, is2XL, is3XL, is4XL, is5XL } = useResponsive();
@@ -69,7 +70,15 @@ export default function OwnedItems({
   const cmsInfo = store.getState().info.cmsInfo;
   const curChain = cmsInfo?.curChain || '';
   const [filterList, setFilterList] = useState(getFilterList(curChain));
-  const defaultFilter = useMemo(() => getDefaultFilter(curChain), [curChain]);
+  const defaultFilter = useMemo(
+    () =>
+      getDefaultFilter(curChain, {
+        pathname,
+        rarityFilterItems: cmsInfo?.rarityFilterItems,
+      }),
+    [cmsInfo?.rarityFilterItems, curChain, pathname],
+  );
+
   const [filterSelect, setFilterSelect] = useState<IFilterSelect>(defaultFilter);
   const [tempFilterSelect, setTempFilterSelect] = useState<IFilterSelect>(defaultFilter);
   const [current, setCurrent] = useState(1);
@@ -176,6 +185,7 @@ export default function OwnedItems({
   }, [pageState]);
 
   useEffect(() => {
+    setSearchParam('');
     fetchData({
       params: defaultRequestParams,
       requestType: pageState,
@@ -378,31 +388,36 @@ export default function OwnedItems({
     },
   );
 
-  const handleBaseClearAll = useCallback(() => {
-    setCurrent(1);
-    setFilterSelect(defaultFilter);
-    setTempFilterSelect(defaultFilter);
-  }, [defaultFilter]);
+  const handleBaseClearAll = useCallback(
+    (filterData?: IFilterSelect) => {
+      setCurrent(1);
+      setFilterSelect(filterData || defaultFilter);
+      setTempFilterSelect(filterData || defaultFilter);
+    },
+    [defaultFilter],
+  );
 
   const handleFilterClearAll = useCallback(() => {
-    handleBaseClearAll();
-    const filter = getFilter(defaultFilter);
+    const filterData = getDefaultFilter(curChain);
+    handleBaseClearAll(filterData);
+    const filter = getFilter(filterData);
     fetchData({
       params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize) },
       requestType: pageState,
     });
     setCollapsed(false);
-  }, [defaultFilter, fetchData, handleBaseClearAll, pageState, requestParams]);
+  }, [curChain, fetchData, handleBaseClearAll, pageState, requestParams]);
 
   const handleTagsClearAll = useCallback(() => {
+    const filterData = getDefaultFilter(curChain);
     setSearchParam('');
-    handleBaseClearAll();
-    const filter = getFilter(defaultFilter);
+    handleBaseClearAll(filterData);
+    const filter = getFilter(filterData);
     fetchData({
       params: { ...requestParams, ...filter, skipCount: getPageNumber(1, pageSize), keyword: '' },
       requestType: pageState,
     });
-  }, [defaultFilter, fetchData, handleBaseClearAll, pageState, requestParams]);
+  }, [curChain, fetchData, handleBaseClearAll, pageState, requestParams]);
 
   const symbolChange = (e: any) => {
     setSearchParam(e.target.value);

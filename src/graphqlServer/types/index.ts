@@ -172,3 +172,40 @@ export type TGetLatestSchrodingerList = (
   client: TGraphQLClient,
   params: TGetLatestSchrodingerListParams,
 ) => TCommonGraphQLResult<TGetLatestSchrodingerListResult>;
+
+export type TNftActivityListByConditionInput = {
+  skipCount: number;
+  maxResultCount: number;
+  sortType: string;
+  abovePrice: number;
+  filterSymbol: string;
+  timestampMin: number;
+  timestampMax: number;
+  types: number[];
+};
+
+export type TNftActivityListByConditionParams = {
+  input: TNftActivityListByConditionInput;
+};
+
+export type TNftActivityListByConditionData = {
+  nftInfoId: string;
+  amount: number;
+  timestamp: string;
+  price: number;
+  type: number;
+  from: string;
+  to: string;
+};
+
+export type TNftActivityListByConditionResult = {
+  nftActivityListByCondition: {
+    totalRecordCount: number;
+    data: TNftActivityListByConditionData[];
+  };
+};
+
+export type TNftActivityListByCondition = (
+  client: TGraphQLClient,
+  params: TNftActivityListByConditionParams,
+) => TCommonGraphQLResult<TNftActivityListByConditionResult>;

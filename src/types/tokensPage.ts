@@ -102,11 +102,24 @@ export interface IFilterSelect {
   };
 }
 
-export const getDefaultFilter = (ChainId: string): IFilterSelect => {
+export const getDefaultFilter = (
+  ChainId: string,
+  defaultFilter?: {
+    pathname?: string;
+    rarityFilterItems:
+      | {
+          label: string;
+          value: string;
+        }[]
+      | undefined;
+  },
+): IFilterSelect => {
+  const { pathname, rarityFilterItems } = defaultFilter || {};
+  const needRare = pathname && pathname === '/rare-cats';
   return {
     [FilterKeyEnum.Rarity]: {
       type: FilterType.Checkbox,
-      data: [],
+      data: needRare ? rarityFilterItems || [] : [],
     },
     [FilterKeyEnum.Chain]: {
       type: FilterType.Checkbox,
