@@ -112,6 +112,7 @@ export type TGlobalConfigType = {
   rankListEntrance?: {
     open?: boolean;
     title?: string;
+    link?: string;
   };
   rarityFilterItems: Array<{
     label: string;
@@ -173,10 +174,29 @@ export interface IKOLRulesSection {
   data: IKOLRulesSectionData[];
 }
 
+export interface IRankListPageConfigLink {
+  type: 'img-link' | 'img-externalLink' | 'link' | 'externalLink';
+  imgUrl?: {
+    pc: string;
+    mobile: string;
+  };
+  text?: string;
+  link?: string;
+  style?: string;
+}
+
+export interface IRankListPageConfig {
+  pageTitle?: string;
+  title?: string;
+  description?: string[];
+  showAnnouncement?: boolean;
+  link?: IRankListPageConfigLink[];
+  content?: string[];
+}
+
 export interface IRankListData {
   lp: {
     title?: string;
-    pageTitle?: string;
     description?: string[];
     rules?: {
       title?: string;
@@ -193,4 +213,37 @@ export interface IRankListData {
       link: string;
     })[];
   };
+  pageConfig?: IRankListPageConfig;
+}
+
+export interface IActivityDetailRulesLink {
+  type: 'img-link' | 'img-externalLink' | 'link' | 'externalLink';
+  imgUrl?: {
+    pc: string;
+    mobile: string;
+  };
+  text?: string;
+  link?: string;
+  style?: Record<string, any>;
+}
+
+export interface IActivityDetailRulesTable {
+  data: Record<string, string | number>[];
+  header: {
+    key: string;
+    title: string;
+    width: number;
+  }[];
+}
+export interface IActivityDetailRules {
+  title?: string;
+  description?: string[];
+  rulesTable?: IActivityDetailRulesTable;
+  link?: IActivityDetailRulesLink[];
+  bottomDescription?: string[];
+}
+
+export interface IActivityDetailData {
+  pageTitle?: string;
+  rules?: IActivityDetailRules[];
 }

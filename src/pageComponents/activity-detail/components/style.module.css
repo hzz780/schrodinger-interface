@@ -1,0 +1,14 @@
+.rules-table {
+  :global{
+    .aelfd-table-container {
+      .aelfd-table-thead {
+        .aelfd-table-cell {
+          @apply !bg-neutralDefaultBg;
+        }
+        .aelfd-table-cell::before {
+          @apply !bg-transparent;
+        }
+      }
+    }
+  }
+}

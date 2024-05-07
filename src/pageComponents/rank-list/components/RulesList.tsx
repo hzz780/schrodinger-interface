@@ -131,7 +131,7 @@ function RulesList({
       <span className={textStyle}>
         Don't miss out on this airdrop and start contributing to our $SGR/ELF liquidity pool now!
       </span>
-      <span className={textStyle}>The campaign runs from 19 April until 29 April 2024.</span>
+      <span className={textStyle}>The campaign ran from 19 April until 29 April 2024.</span>
     </>
   );
 }

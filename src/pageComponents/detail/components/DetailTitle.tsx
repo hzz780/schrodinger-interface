@@ -24,7 +24,7 @@ export default function DetailTitle({ detail, fromListAll }: { detail: TSGRToken
         <TextEllipsis value={detail.symbol} className={styles.value} />
       </div>
       <div className={clsx(styles.card, 'ml-[16px]')}>
-        <div className={clsx(styles.title, 'min-w-[102px] whitespace-nowrap')}>{amountText}</div>
+        <div className={clsx(styles.title, 'min-w-[102px] whitespace-nowrap text-right')}>{amountText}</div>
         <div className={clsx(styles.value, 'text-right')}>{amountStr}</div>
       </div>
     </div>

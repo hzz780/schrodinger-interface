@@ -35,6 +35,7 @@ import useGetLoginStatus from 'redux/hooks/useGetLoginStatus';
 import { store } from 'redux/store';
 import { setCurViewListType } from 'redux/reducer/info';
 import { ListTypeEnum } from 'types';
+import StrayCatsItem from './components/StrayCatsItem';
 
 export default function Header() {
   const { checkLogin, checkTokenValid } = useCheckLoginAndToken();
@@ -157,6 +158,7 @@ export default function Header() {
         key: 'asset',
         label: <AssetItem closeMenuModal={closeMenuModal} />,
       },
+      { key: 'strayCats', label: <StrayCatsItem checkAndRedirect={checkAndRedirect} /> },
       { key: 'points', label: <PointsItem checkAndRedirect={checkAndRedirect} /> },
       {
         key: 'logout',
@@ -325,7 +327,7 @@ export default function Header() {
             'w-full p-[16px] text-sm flex items-center justify-center text-white font-medium text-center bg-brandDefault cursor-pointer',
           )}
           onClick={() => {
-            router.push('/rank-list');
+            router.push(cmsInfo.rankListEntrance?.link || '/rank-list');
           }}>
           <span className="flex-1 max-w-max">{cmsInfo.rankListEntrance.title}</span>
 
