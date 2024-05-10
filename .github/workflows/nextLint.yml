@@ -26,8 +26,8 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install Dependencies
-        run: npm install
+        run: yarn
 
       - name: Run ESLint
-        run: npm run lint
+        run: yarn lint
 
